@@ -1,0 +1,80 @@
+fileFormatVersion: 2
+guid: c291aa7a665770d4eb948342b2f33db7
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/3
+    Astar-Pathfinding/Scripts/PathFinder"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    PathFinder_1 = require(\"@assets/Experience/3 Astar-Pathfinding/Scripts/PathFinder\");\nvar
+    TileType;\n(function (TileType) {\n    TileType[TileType[\"DEFAULT\"] = 0] =
+    \"DEFAULT\";\n    TileType[TileType[\"PATH\"] = 1] = \"PATH\";\n    TileType[TileType[\"OBSTACLE\"]
+    = 2] = \"OBSTACLE\";\n})(TileType || (TileType = {}));\nclass Tile {\n    constructor(type,
+    obj, row, col) {\n        this.type = type;\n        this.obj = obj;\n       
+    this.pos = new UnityEngine_1.Vector2Int(row, col);\n    }\n}\nclass MapController
+    extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n        super(...arguments);\n       
+    this.rowAmount = 11;\n        this.columnAmount = 5;\n        this.obstacleChance
+    = 0.2;\n        this.playerSpawn = new UnityEngine_1.Vector2Int(0, 0);\n       
+    this.obstacleColor = UnityEngine_1.Color.black;\n        this.pathColor = UnityEngine_1.Color.white;\n       
+    this.OnPathFound = new GeniesEvent();\n    }\n    Start() {\n        this.GenerateGrid();\n   
+    }\n    GenerateGrid() {\n        this.grid = new Array(this.rowAmount);\n       
+    for (let i = 0; i < this.rowAmount; i++) {\n            this.grid[i] = new Array(this.columnAmount);\n           
+    for (let j = 0; j < this.columnAmount; j++) {\n                let type = //
+    @ts-ignore\n                 UnityEngine_1.Random.Range_EBB7509C_H1075CF37(0.0,
+    1.0) < this.obstacleChance ? TileType.OBSTACLE : TileType.PATH;\n               
+    if (this.playerSpawn.x == i && this.playerSpawn.y == j) {\n                   
+    type = TileType.PATH;\n                }\n                let pos = new UnityEngine_1.Vector3(j,
+    0, i);\n                let obj = UnityEngine_1.GameObject.Instantiate(this.tilePrefab,
+    pos, UnityEngine_1.Quaternion.identity);\n                obj.transform.parent
+    = this.transform;\n                obj.name = \"Tile (\" + i.toString() + \",\"
+    + j.toString() + \")\";\n                if (type == TileType.OBSTACLE) {\n                   
+    obj.GetComponent($typeof(UnityEngine_1.MeshRenderer)).material.color = this.obstacleColor;\n               
+    }\n                else if (type == TileType.PATH) {\n                    obj.GetComponent($typeof(UnityEngine_1.MeshRenderer)).material.color
+    = this.pathColor;\n                }\n                this.grid[i][j] = new Tile(type,
+    obj, i, j);\n            }\n        }\n    }\n    CheckTargetPath(player, target)
+    {\n        let startTile = this.GetClosestTileToObject(player);\n        let
+    finishTile = this.GetTileFromObject(target);\n        console.log(\"Start Tile:
+    \" + startTile.pos.ToString());\n        console.log(\"Finish Tile: \" + finishTile.pos.ToString());\n       
+    console.log(\"Checking path!\");\n        let grid = this.GetNumberGrid(this.grid);\n       
+    let pathFinder = new PathFinder_1.default(grid);\n        let path = pathFinder.findPath(startTile.pos,
+    finishTile.pos);\n        if (path) {\n            console.log(\"Found a path!\");\n           
+    this.OnPathFound.trigger(this.GetObjectPath(path));\n        }\n        else
+    {\n            console.log(\"Did not find a path!\");\n        }\n    }\n   
+    GetObjectPath(path) {\n        let result = new Array(path.length);\n       
+    for (let i = 0; i < path.length; i++) {\n            result[i] = this.GetTileFromPosition(path[i]).obj;\n       
+    }\n        return result;\n    }\n    GetClosestTileToObject(obj) {\n       
+    let leastDistance;\n        let closesTile;\n        for (let i = 0; i < this.rowAmount;
+    i++) {\n            for (let j = 0; j < this.columnAmount; j++) {\n               
+    let tile = this.grid[i][j];\n                let offset = UnityEngine_1.Vector3.op_Subtraction(obj.transform.position,
+    tile.obj.transform.position);\n                let distance = offset.magnitude;\n               
+    if (closesTile == null || distance < leastDistance) {\n                    leastDistance
+    = distance;\n                    closesTile = tile;\n                }\n           
+    }\n        }\n        return closesTile;\n    }\n    GetTileFromObject(obj) {\n       
+    for (let i = 0; i < this.rowAmount; i++) {\n            for (let j = 0; j < this.columnAmount;
+    j++) {\n                if (this.grid[i][j].obj == obj) {\n                   
+    return this.grid[i][j];\n                }\n            }\n        }\n    }\n   
+    GetTileFromPosition(pos) {\n        for (let i = 0; i < this.rowAmount; i++)
+    {\n            for (let j = 0; j < this.columnAmount; j++) {\n               
+    if (this.grid[i][j].pos.x == pos.x && this.grid[i][j].pos.y == pos.y) {\n                   
+    return this.grid[i][j];\n                }\n            }\n        }\n    }\n   
+    GetNumberGrid(grid) {\n        let result;\n        result = new Array(this.rowAmount);\n       
+    for (let i = 0; i < this.rowAmount; i++) {\n            result[i] = new Array(this.columnAmount);\n           
+    for (let j = 0; j < this.columnAmount; j++) {\n                result[i][j] =
+    this.grid[i][j].type == TileType.PATH ? 0 : 1;\n            }\n        }\n       
+    return result;\n    }\n}\nexports.default = MapController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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QUUsRUFBRTtZQUNyQyxLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFlBQVksRUFBRSxDQUFDLEVBQUUsRUFBRTtnQkFDeEMsSUFBRyxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxHQUFHLEVBQUU7b0JBQzNCLE9BQU8sSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUM7Z0JBQzFCO1lBQ0o7UUFDSjtJQUNKO0lBRVEsbUJBQW1CLENBQUMsR0FBZTtRQUN2QyxLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFNBQVMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUNyQyxLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFlBQVksRUFBRSxDQUFDLEVBQUUsRUFBRTtnQkFDeEMsSUFBRyxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksR0FBRyxDQUFDLENBQUMsSUFBSSxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksR0FBRyxDQUFDLENBQUMsRUFBRTtvQkFDakUsT0FBTyxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztnQkFDMUI7WUFDSjtRQUNKO0lBQ0o7SUFFUSxhQUFhLENBQUMsSUFBYztRQUNoQyxJQUFJLE1BQWtCO1FBQ3RCLE1BQU0sR0FBRyxJQUFJLEtBQUssQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDO1FBQ2xDLEtBQUssSUFBSSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxJQUFJLENBQUMsU0FBUyxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQ3JDLE1BQU0sQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJLEtBQUssQ0FBQyxJQUFJLENBQUMsWUFBWSxDQUFDO1lBQ3hDLEtBQUssSUFBSSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxJQUFJLENBQUMsWUFBWSxFQUFFLENBQUMsRUFBRSxFQUFFO2dCQUN4QyxNQUFNLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxJQUFJLElBQUksUUFBUSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO1lBQ2hFO1FBQ0o7UUFDQSxPQUFPLE1BQU07SUFDakI7Q0FDSjtBQTFIQSxnQ0EwSEEiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIk1hcENvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"8de101bfcc625d8df1970e2488d5a545","Specifier":"@assets/Experience/3
+    Astar-Pathfinding/Scripts/MapController","DefaultTypeName":"@assets/Experience/3
+    Astar-Pathfinding/Scripts/MapController.MapController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/3
+    Astar-Pathfinding/Scripts/MapController.MapController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"tilePrefab","Name":"tilePrefab","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Tile
+    Prefab"},{"Path":"rowAmount","Name":"rowAmount","TypeName":"System.Int32","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["11"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Row
+    Amount"},{"Path":"columnAmount","Name":"columnAmount","TypeName":"System.Int32","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["5"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Column
+    Amount"},{"Path":"obstacleChance","Name":"obstacleChance","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["0.2"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Obstacle
+    Chance"},{"Path":"playerSpawn","Name":"playerSpawn","TypeName":"UnityEngine.Vector2Int","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["new
+    UnityEngine.Vector2Int(0, 0);"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Spawn"},{"Path":"OnPathFound","Name":"OnPathFound","TypeName":"@com.genies.scripting@1.6.0/Runtime/Typing/global.d.global.GeniesEvent","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":["new
+    @com.genies.scripting@1.6.0/Runtime/Typing/global.d.global.GeniesEvent();"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"On
+    Path Found"}],"SupportedUiEvents":0,"DisplayName":"MapController","name":"MapController","hideFlags":8}'

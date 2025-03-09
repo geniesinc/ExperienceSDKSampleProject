@@ -1,0 +1,35 @@
+fileFormatVersion: 2
+guid: 2c12c9380de9bb54980f5c31a8a1a7c4
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/4
+    Basketball/Scripts/BasketballGameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    BasketballGameManager_1 = require(\"@assets/Experience/4 Basketball/Scripts/BasketballGameManager\");\nclass
+    BasketballController extends UnityEngine_1.MonoBehaviour {\n    constructor()
+    {\n        super(...arguments);\n        this.resetTime = 4;\n    }\n    Start()
+    {\n        ////Get GameManager singleton and reset ball coroutine\n        this.gameManager
+    = BasketballGameManager_1.default.Instance;\n        this.StartCoroutine(this.InvokeReset());\n   
+    }\n    /** Resets the ball after some time */\n    *InvokeReset() {\n       
+    yield new UnityEngine_1.WaitForSeconds(this.resetTime);\n        this.gameObject.SetActive(false);\n   
+    }\n    /** Check if the ball entered the hoop cylinder above the rim */\n   
+    OnTriggerEnter(other) {\n        if (other.gameObject.name == \"Cylinder\") {\n           
+    if (this.transform.position.y > other.gameObject.transform.position.y) {\n               
+    this.goodShot = true;\n            }\n            else {\n                this.goodShot
+    = false;\n            }\n        }\n    }\n    /** Check if the ball exited the
+    hoop cylinder below the rim */\n    OnTriggerExit(other) {\n        if (other.gameObject.name
+    == \"Cylinder\") {\n            if (this.transform.position.y < other.gameObject.transform.position.y
+    && this.goodShot) {\n                console.log(\"Good Shot!\");\n               
+    this.gameManager.OnShotMade.trigger();\n            }\n            else {\n               
+    console.log(\"Bad Shot!\");\n            }\n        }\n    }\n}\nexports.default
+    = BasketballController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQmFza2V0YmFsbENvbnRyb2xsZXIuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSw2Q0FBaUY7QUFDakYseUdBQTJEO0FBRTNELE1BQXFCLG9CQUFxQixTQUFRLDJCQUFhO0lBQS9EOztRQUVZLGNBQVMsR0FBRyxDQUFDLENBQUM7SUF3QzFCO0lBbENJLEtBQUs7UUFDRCxzREFBcUQ7UUFDckQsSUFBSSxDQUFDLFdBQVcsR0FBRywrQkFBcUIsQ0FBQyxRQUFRO1FBQ2pELElBQUksQ0FBQyxjQUFjLENBQUMsSUFBSSxDQUFDLFdBQVcsRUFBRSxDQUFDO0lBQzNDO0lBRUEsc0NBQXFDO0lBQzdCLENBQUMsV0FBVztRQUNoQixNQUFNLElBQUksNEJBQWMsQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDO1FBQ3hDLElBQUksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztJQUNwQztJQUVBLGdFQUErRDtJQUMvRCxjQUFjLENBQUMsS0FBZTtRQUMxQixJQUFHLEtBQUssQ0FBQyxVQUFVLENBQUMsSUFBSSxJQUFJLFVBQVUsRUFBRTtZQUNwQyxJQUFHLElBQUksQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLENBQUMsR0FBRyxLQUFLLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxFQUFFO2dCQUNsRSxJQUFJLENBQUMsUUFBUSxHQUFHLElBQUk7WUFDeEIsQ0FBQztpQkFBSTtnQkFDRCxJQUFJLENBQUMsUUFBUSxHQUFHLEtBQUs7WUFDekI7UUFDSjtJQUNKO0lBRUEsK0RBQThEO0lBQzlELGFBQWEsQ0FBQyxLQUFlO1FBQ3pCLElBQUcsS0FBSyxDQUFDLFVBQVUsQ0FBQyxJQUFJLElBQUksVUFBVSxFQUFFO1lBQ3BDLElBQUcsSUFBSSxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxHQUFHLEtBQUssQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLFFBQVEsQ0FBQyxDQUFDLElBQUksSUFBSSxDQUFDLFFBQVEsRUFBRTtnQkFDbkYsT0FBTyxDQUFDLEdBQUcsQ0FBQyxZQUFZLENBQUM7Z0JBQ3pCLElBQUksQ0FBQyxXQUFXLENBQUMsVUFBVSxDQUFDLE9BQU8sRUFBRTtZQUN6QyxDQUFDO2lCQUFJO2dCQUNELE9BQU8sQ0FBQyxHQUFHLENBQUMsV0FBVztZQUMzQjtRQUNKO0lBQ0o7Q0FDSjtBQTFDQSx1Q0EwQ0EiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkJhc2tldGJhbGxDb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"33203d9d4de374fb43e0e40ac0ec3640","Specifier":"@assets/Experience/4
+    Basketball/Scripts/BasketballController","DefaultTypeName":"@assets/Experience/4
+    Basketball/Scripts/BasketballController.BasketballController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/4
+    Basketball/Scripts/BasketballController.BasketballController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"resetTime","Name":"resetTime","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["4"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Reset
+    Time"}],"SupportedUiEvents":0,"DisplayName":"BasketballController","name":"BasketballController","hideFlags":8}'

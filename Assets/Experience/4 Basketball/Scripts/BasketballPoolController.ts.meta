@@ -1,0 +1,48 @@
+fileFormatVersion: 2
+guid: ec6a9d5d6021ba2429dca5baee448849
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/4
+    Basketball/Scripts/BasketballGameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    BasketballGameManager_1 = require(\"@assets/Experience/4 Basketball/Scripts/BasketballGameManager\");\nclass
+    BasketballPoolController extends UnityEngine_1.MonoBehaviour {\n    constructor()
+    {\n        super(...arguments);\n        this.objects = [];\n    }\n    Awake()
+    {\n        //Get GameManager singleton\n        this.gameManager = BasketballGameManager_1.default.Instance;\n       
+    //Add listeners to GameManager events\n        this.gameManager.OnGameStateChange.addListener(this.CheckGameState,
+    //@ts-ignore\n        this);\n        this.gameManager.OnShotAttempted.addListener(this.ShootBall,
+    //@ts-ignore\n        this);\n    }\n    /** Manages the player logic when the
+    game state changes. @param newState */\n    CheckGameState(newState) {\n       
+    switch (newState) {\n            case BasketballGameManager_1.GameState.LOADING:\n               
+    console.log(\"Loading\");\n                this.SpawnObjects();\n               
+    break;\n            case BasketballGameManager_1.GameState.GAME_PLAY:\n               
+    this.OnGamePlay();\n                break;\n            case BasketballGameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** When a
+    game starts, deactivate all the balls */\n    OnGamePlay() {\n        this.DeactivateAll();\n   
+    }\n    /** Once the time runs out, the balls should pause mid air */\n    OnGameOver()
+    {\n        for (let i = 0; i < this.objects.length; i++) {\n            this.objects[i].GetComponent($typeof(UnityEngine_1.Rigidbody)).useGravity
+    = false;\n        }\n    }\n    /** Shoots a new basketball @param Vector3 position
+    to spawn ball @param Vector3 the force applied to ball */\n    ShootBall(position,
+    force) {\n        let basketball = this.GetBasketball();\n        basketball.SetActive(true);\n       
+    basketball.transform.position = position;\n        let rb = basketball.GetComponent($typeof(UnityEngine_1.Rigidbody));\n       
+    rb.useGravity = true;\n        rb.AddForce(force);\n    }\n    /** Spawns the
+    initial pool of objects */\n    SpawnObjects() {\n        UnityEngine_1.Debug.Log(\"Spawning
+    Objects\");\n        for (let i = 0; i < this.amount; i++) {\n            let
+    temp = UnityEngine_1.GameObject.Instantiate(this.prefab, this.transform);\n           
+    this.objects[i] = temp;\n            temp.SetActive(false);\n        }\n    }\n   
+    /** Gets a deactivated object from the pool */\n    GetBasketball() {\n       
+    let result = null;\n        for (let i = 0; i < this.objects.length; i++) {\n           
+    if (!this.objects[i].activeInHierarchy) {\n                result = this.objects[i];\n               
+    break;\n            }\n        }\n        return result;\n    }\n    /** Sets
+    all the objects as deactivated */\n    DeactivateAll() {\n        for (let i
+    = 0; i < this.objects.length; i++) {\n            this.objects[i].SetActive(false);\n       
+    }\n    }\n}\nexports.default = BasketballPoolController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQmFza2V0YmFsbFBvb2xDb250cm9sbGVyLmpzIiwibWFwcGluZ3MiOiI7O0FBQUEsNkNBQWtGO0FBQ2xGLHlHQUEwRTtBQUUxRSxNQUFxQix3QkFBeUIsU0FBUSwyQkFBYTtJQUFuRTs7UUFJWSxZQUFPLEdBQWlCLEVBQUU7SUFnRnRDO0lBNUVZLEtBQUs7UUFDVCwyQkFBMEI7UUFDMUIsSUFBSSxDQUFDLFdBQVcsR0FBRywrQkFBcUIsQ0FBQyxRQUFRO1FBQ2pELHFDQUFvQztRQUNwQyxJQUFJLENBQUMsV0FBVyxDQUFDLGlCQUFpQixDQUFDLFdBQVcsQ0FBQyxJQUFJLENBQUMsY0FBYTtZQUFDLENBQUM7UUFDbkUsSUFBSSxDQUFDLFdBQVcsQ0FBQyxlQUFlLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxTQUFRO1lBQUMsQ0FBQztJQUNoRTtJQUVBLDRFQUEyRTtJQUNuRSxjQUFjLENBQUMsUUFBbUI7UUFDdEMsUUFBTyxRQUFRLEVBQUU7WUFDYixLQUFLLGlDQUFTLENBQUMsT0FBTztnQkFDbEIsT0FBTyxDQUFDLEdBQUcsQ0FBQyxTQUFTLENBQUM7Z0JBQ3RCLElBQUksQ0FBQyxZQUFZLEVBQUU7Z0JBQ25CLE1BQUs7WUFDVCxLQUFLLGlDQUFTLENBQUMsU0FBUztnQkFDcEIsSUFBSSxDQUFDLFVBQVUsRUFBRTtnQkFDakIsTUFBSztZQUNULEtBQUssaUNBQVMsQ0FBQyxTQUFTO2dCQUNwQixJQUFJLENBQUMsVUFBVSxFQUFFO2dCQUNqQixNQUFLO1FBQ2I7SUFDSjtJQUVBLG1EQUFrRDtJQUMxQyxVQUFVO1FBQ2QsSUFBSSxDQUFDLGFBQWEsRUFBRTtJQUN4QjtJQUVBLDZEQUE0RDtJQUNwRCxVQUFVO1FBQ2QsS0FBSSxJQUFJLENBQUMsR0FBRyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQyxPQUFPLENBQUMsTUFBTSxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQ3pDLElBQUksQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDLENBQUMsWUFBVyxTQUFFLHVCQUFRLEVBQUksQ0FBQyxVQUFVLEdBQUcsS0FBSztRQUNoRTtJQUNKO0lBRUEsNkdBQTRHO0lBQ3BHLFNBQVMsQ0FBQyxRQUFpQixFQUFFLEtBQWM7UUFDL0MsSUFBSSxVQUFVLEdBQUcsSUFBSSxDQUFDLGFBQWEsRUFBRTtRQUNyQyxVQUFVLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQztRQUMxQixVQUFVLENBQUMsU0FBUyxDQUFDLFFBQVEsR0FBRyxRQUFRO1FBQ3hDLElBQUksRUFBRSxHQUFHLFVBQVUsQ0FBQyxZQUFXLFNBQUUsdUJBQVEsRUFBSTtRQUM3QyxFQUFFLENBQUMsVUFBVSxHQUFHLElBQUk7UUFDcEIsRUFBRSxDQUFDLFFBQVEsQ0FBQyxLQUFLLENBQUM7SUFDdEI7SUFFQSx5Q0FBd0M7SUFDaEMsWUFBWTtRQUNoQixtQkFBSyxDQUFDLEdBQUcsQ0FBQyxrQkFBa0IsQ0FBQztRQUM3QixLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUNsQyxJQUFJLElBQUksR0FBRyx3QkFBVSxDQUFDLFdBQVcsQ0FBQyxJQUFJLENBQUMsTUFBTSxFQUFFLElBQUksQ0FBQyxTQUFTLENBQWU7WUFDNUUsSUFBSSxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJO1lBQ3RCLElBQUksQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQ3pCO0lBQ0o7SUFFQSw4Q0FBNkM7SUFDckMsYUFBYTtRQUNqQixJQUFJLE1BQU0sR0FBRyxJQUFJO1FBRWpCLEtBQUksSUFBSSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxJQUFJLENBQUMsT0FBTyxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN6QyxJQUFHLENBQUMsSUFBSSxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUMsQ0FBQyxpQkFBaUIsRUFBRTtnQkFDbkMsTUFBTSxHQUFHLElBQUksQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDO2dCQUN4QixNQUFLO1lBQ1Q7UUFDSjtRQUVBLE9BQU8sTUFBTTtJQUNqQjtJQUVBLDBDQUF5QztJQUNqQyxhQUFhO1FBQ2pCLEtBQUksSUFBSSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxJQUFJLENBQUMsT0FBTyxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN6QyxJQUFJLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQyxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7UUFDcEM7SUFDSjtDQUNKO0FBcEZBLDJDQW9GQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQmFza2V0YmFsbFBvb2xDb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"445264beb719014579fded11fd595410","Specifier":"@assets/Experience/4
+    Basketball/Scripts/BasketballPoolController","DefaultTypeName":"@assets/Experience/4
+    Basketball/Scripts/BasketballPoolController.BasketballPoolController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/4
+    Basketball/Scripts/BasketballPoolController.BasketballPoolController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"prefab","Name":"prefab","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Prefab"},{"Path":"amount","Name":"amount","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Amount"}],"SupportedUiEvents":0,"DisplayName":"BasketballPoolController","name":"BasketballPoolController","hideFlags":8}'

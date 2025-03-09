@@ -1,0 +1,50 @@
+fileFormatVersion: 2
+guid: f2fef3bb98fa60a42a73a229785aa865
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/3
+    Astar-Pathfinding/Scripts/MapController"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Avatars_Sdk_1 = require(\"Genies.Avatars.Sdk\");\nconst DG_Tweening_1
+    = require(\"DG.Tweening\");\nconst Cysharp_Threading_Tasks_1 = require(\"Cysharp.Threading.Tasks\");\nconst
+    DG_Tweening_Core_1 = require(\"DG.Tweening.Core\");\nconst _TweenerCore_3_Vector3_Vector3_VectorOptions
+    = $generic(DG_Tweening_Core_1.TweenerCore$3, $typeof(\"UnityEngine.Vector3\"),
+    $typeof(\"UnityEngine.Vector3\"), $typeof(\"DG.Tweening.Plugins.Options.VectorOptions\"));\nconst
+    _UniTask_1_GeniesAvatar = $generic(Cysharp_Threading_Tasks_1.UniTask$1, $typeof(\"Genies.Avatars.Sdk.GeniesAvatar\"));\nclass
+    PlayerController extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.walkSpeed = 1;\n        this.canMove = false;\n   
+    }\n    async Start() {\n        this.mapGenerator.OnPathFound.addListener((path)
+    => {\n            console.log(\"Path received!\");\n            this.canMove
+    = false;\n            this.StartCoroutine(this.WalkPath(path));\n           
+    path.forEach((tile) => {\n                console.log(tile.name);\n           
+    });\n        });\n        await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.InitializeAsync());\n       
+    this.userAvatar = await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.LoadUserAvatarAsync(\"UserAvatar\",
+    this.transform, this.playerAnimatorController));\n        this.canMove = true;\n   
+    }\n    *WalkPath(path) {\n        // @ts-ignore\n        this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    0.5);\n        for (let i = 0; i < path.length; i++) {\n            this.transform.LookAt(path[i].transform.position);\n           
+    DG_Tweening_1.ShortcutExtensions.DOMove(this.transform, path[i].transform.position,
+    this.walkSpeed);\n            yield new UnityEngine_1.WaitForSeconds(this.walkSpeed);\n       
+    }\n        // @ts-ignore\n        this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (0));\n        this.canMove = true;\n    }\n    Update() {\n        if (this.canMove
+    && UnityEngine_1.Input.touchCount > 0) {\n            let ray = UnityEngine_1.Camera.main.ScreenPointToRay(UnityEngine_1.Input.mousePosition);\n           
+    //Create a reference for the Raycast method parameter\n            let ref =
+    $ref();\n            if (UnityEngine_1.Physics.Raycast(ray, ref)) {\n               
+    //Release the reference to obtain the value\n                let hitInfo = $unref(ref);\n               
+    let obj = hitInfo.collider.gameObject;\n                console.log(`Hit ${obj.name}`);\n               
+    if (obj.tag == \"Tile\") {\n                    this.mapGenerator.CheckTargetPath(this.gameObject,
+    obj);\n                }\n            }\n            else {\n               
+    console.log(`Failed to Detect Collision`);\n            }\n        }\n    }\n}\nexports.default
+    = PlayerController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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","ScriptHash":"efb0f01ad12952f5b8caa1fb07d3eb8b","Specifier":"@assets/Experience/3
+    Astar-Pathfinding/Scripts/PlayerController","DefaultTypeName":"@assets/Experience/3
+    Astar-Pathfinding/Scripts/PlayerController.PlayerController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/3
+    Astar-Pathfinding/Scripts/PlayerController.PlayerController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"mapGenerator","Name":"mapGenerator","TypeName":"@assets/Experience/3
+    Astar-Pathfinding/Scripts/MapController.MapController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":true,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Map
+    Generator"},{"Path":"walkSpeed","Name":"walkSpeed","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["1"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Walk
+    Speed"},{"Path":"playerAnimatorController","Name":"playerAnimatorController","TypeName":"UnityEngine.RuntimeAnimatorController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Animator Controller"}],"SupportedUiEvents":0,"DisplayName":"PlayerController","name":"PlayerController","hideFlags":8}'

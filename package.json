@@ -1,0 +1,16 @@
+{
+  "name": "ExperienceSDKSampleProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "genies-typescript-compiler": "file:Genies/Scripting/genies-typescript-compiler-2.0.9.tgz",
+    "typescript": "^5.4.5"
+  }
+}

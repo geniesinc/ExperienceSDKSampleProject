@@ -1,0 +1,111 @@
+fileFormatVersion: 2
+guid: 99fc684ce04ac8940812d2f01f30a3ce
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    Genies_Avatars_Sdk_1 = require(\"Genies.Avatars.Sdk\");\nconst UnityEngine_1
+    = require(\"UnityEngine\");\nconst UnityEngine_UI_1 = require(\"UnityEngine.UI\");\nconst
+    Cysharp_Threading_Tasks_1 = require(\"Cysharp.Threading.Tasks\");\nconst _UniTask_1_GeniesAvatar
+    = $generic(Cysharp_Threading_Tasks_1.UniTask$1, $typeof(\"Genies.Avatars.Sdk.GeniesAvatar\"));\nclass
+    GameController extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.colors = [\n            UnityEngine_1.Color.white,
+    //0\n            UnityEngine_1.Color.red, //1\n            UnityEngine_1.Color.green,
+    //2\n            UnityEngine_1.Color.blue, //3\n            UnityEngine_1.Color.magenta,
+    //4\n            UnityEngine_1.Color.cyan //5\n        ];\n        this.rowsAmount
+    = 10;\n    }\n    async Start() {\n        //Reset game at Start and deactivate
+    Play button\n        this.ResetGame();\n        this.playButton.interactable
+    = false;\n        //Load the Genies Avatar and then activate Play button\n       
+    await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.InitializeAsync());\n       
+    this.userAvatar = await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.LoadUserAvatarAsync(\"UserAvatar\",
+    this.transform, this.playerAnimator));\n        this.userAvatar.Root.transform.eulerAngles
+    = new UnityEngine_1.Vector3(0, 180, 0);\n        this.retryButton.onClick.AddListener(()
+    => this.ResetGame());\n        this.playButton.onClick.AddListener(() => this.HideTitle());\n       
+    this.playButton.interactable = true;\n    }\n    /** Hide title screen when the
+    play button is pressed */\n    HideTitle() {\n        this.titlePanel.SetActive(false);\n   
+    }\n    /** Reset the game to title screen with new board and solution */\n   
+    ResetGame() {\n        if (this.userAvatar) {\n            this.userAvatar.Animator.SetTrigger(\"Idle\");\n       
+    }\n        this.decoderPanel.SetActive(true);\n        this.resultsPanel.SetActive(false);\n       
+    this.titlePanel.SetActive(true);\n        this.currentGuess = 0;\n        this.correctGuess
+    = false;\n        this.solution = [];\n        for (let i = 0; i < 4; i++) {\n           
+    this.solution[i] = UnityEngine_1.Mathf.Floor(// @ts-ignore\n            UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(0,
+    this.colors.length));\n        }\n        console.log(\"Solution: \", this.solution.toString());\n       
+    for (let i = 0; i < this.rowsAmount; i++) {\n            let row = this.decoderPanel.transform.GetChild(i);\n           
+    let guessImages = row.GetChild(0).GetComponentsInChildren($typeof(UnityEngine_UI_1.Image));\n           
+    for (let j = 0; j < guessImages.length; j++) {\n                guessImages[j].color
+    = this.colors[0];\n            }\n            let feedbackImages = row.GetChild(1).GetComponentsInChildren($typeof(UnityEngine_UI_1.Image));\n           
+    for (let j = 0; j < feedbackImages.length; j++) {\n                feedbackImages[j].color
+    = this.colors[0];\n            }\n            let submitButton = row.GetChild(2).GetComponentInChildren($typeof(UnityEngine_UI_1.Button));\n           
+    submitButton.gameObject.SetActive(true);\n            row.gameObject.SetActive(false);\n       
+    }\n        this.DisplayRow(this.currentGuess);\n    }\n    /** Displays a new
+    row of buttons @param number row number */\n    DisplayRow(rowNumber) {\n       
+    if (rowNumber >= this.rowsAmount || rowNumber < 0) {\n            console.log(\"Invalid
+    row number to display\");\n            return;\n        }\n        let row =
+    this.decoderPanel.transform.GetChild(rowNumber);\n        row.gameObject.SetActive(true);\n       
+    let guessButtons = row.GetChild(0).GetComponentsInChildren($typeof(UnityEngine_UI_1.Button));\n       
+    guessButtons.forEach(btn => {\n            btn.onClick.AddListener(() => {\n               
+    let colorIndex = this.GetColorIndex(btn.gameObject.GetComponent($typeof(UnityEngine_UI_1.Image)).color);\n               
+    let nextColorIndex = colorIndex + 1 < this.colors.length ? colorIndex + 1 : 0;\n               
+    btn.gameObject.GetComponent($typeof(UnityEngine_UI_1.Image)).color = this.colors[nextColorIndex];\n           
+    });\n        });\n        let submitButton = row.GetChild(2).GetComponentInChildren($typeof(UnityEngine_UI_1.Button));\n       
+    submitButton.onClick.AddListener(() => this.CheckResults());\n    }\n    /**
+    Checks if the player has lost or won when they submit a row */\n    CheckResults()
+    {\n        this.LockRow(this.currentGuess);\n        this.DisplayResults(this.currentGuess);\n       
+    if (this.correctGuess) {\n            this.resultsPanel.SetActive(true);\n           
+    this.resultsText.text = \"You Win\";\n            this.decoderPanel.SetActive(false);\n           
+    this.userAvatar.Animator.SetTrigger(\"Dance\");\n        }\n        else if (this.currentGuess
+    >= this.rowsAmount - 1) {\n            this.resultsPanel.SetActive(true);\n           
+    this.resultsText.text = \"You Lose\";\n            this.decoderPanel.SetActive(false);\n           
+    this.userAvatar.Animator.SetTrigger(\"Cry\");\n        }\n        else {\n           
+    this.currentGuess = this.currentGuess + 1;\n            this.DisplayRow(this.currentGuess);\n       
+    }\n    }\n    /** Display the results after a row of buttons is submitted */\n   
+    DisplayResults(rowNumber) {\n        if (rowNumber >= this.rowsAmount || rowNumber
+    < 0) {\n            console.log(\"Invalid row number to display results\");\n           
+    return;\n        }\n        let row = this.decoderPanel.transform.GetChild(rowNumber);\n       
+    let guessImages = row.GetChild(0).GetComponentsInChildren($typeof(UnityEngine_UI_1.Image));\n       
+    let solutionIndexes = [];\n        let guessIndexes = [];\n        for (let i
+    = 0; i < guessImages.length; i++) {\n            let img = guessImages[i];\n           
+    let colorIndex = this.GetColorIndex(img.color);\n            guessIndexes[i]
+    = colorIndex;\n            solutionIndexes[i] = this.solution[i];\n        }\n       
+    let correctPosition = 0;\n        let correctColor = 0;\n        for (let i =
+    0; i < guessIndexes.length; i++) {\n            if (guessIndexes[i] == solutionIndexes[i])
+    {\n                correctPosition += 1;\n                guessIndexes[i] = -1;\n               
+    solutionIndexes[i] = -1;\n            }\n        }\n        for (let i = 0; i
+    < guessIndexes.length; i++) {\n            if (guessIndexes[i] != -1 && solutionIndexes.includes(guessIndexes[i]))
+    {\n                correctColor += 1;\n                solutionIndexes[i] = -1;\n           
+    }\n        }\n        if (correctPosition >= 4) {\n            this.correctGuess
+    = true;\n        }\n        let feedbackImages = row.GetChild(1).GetComponentsInChildren($typeof(UnityEngine_UI_1.Image));\n       
+    for (let i = 0; i < feedbackImages.length; i++) {\n            if (correctPosition
+    > 0) {\n                feedbackImages[i].color = UnityEngine_1.Color.green;\n               
+    correctPosition -= 1;\n            }\n            else if (correctColor > 0)
+    {\n                feedbackImages[i].color = UnityEngine_1.Color.red;\n               
+    correctColor -= 1;\n            }\n        }\n    }\n    /** Once a row is submitted
+    it will be locked and not clickable */\n    LockRow(rowNumber) {\n        if
+    (rowNumber >= this.rowsAmount || rowNumber < 0) {\n            console.log(\"Invalid
+    row number to lock\");\n            return;\n        }\n        let row = this.decoderPanel.transform.GetChild(rowNumber);\n       
+    let guessButtons = row.GetChild(0).GetComponentsInChildren($typeof(UnityEngine_UI_1.Button));\n       
+    guessButtons.forEach(btn => {\n            btn.onClick.RemoveAllListeners();\n       
+    });\n        let submitButton = row.GetChild(2).GetComponentInChildren($typeof(UnityEngine_UI_1.Button));\n       
+    submitButton.onClick.RemoveAllListeners();\n        submitButton.gameObject.SetActive(false);\n   
+    }\n    /** @returns the index of a certain color */\n    GetColorIndex(color)
+    {\n        for (let i = 0; i < this.colors.length; i++) {\n            let c
+    = this.colors[i];\n            if (UnityEngine_1.Color.op_Equality(c, color))
+    {\n                return i;\n            }\n        }\n        return 0;\n   
+    }\n}\nexports.default = GameController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiR2FtZUNvbnRyb2xsZXIuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSwyREFBbUU7QUFFbkUsNkNBQXVKO0FBQ3ZKLG1EQUE4QztxRUFJckM7QUFBRSxNQUFDLHVCQUFzQixHQUFLLFFBQ25DLG9DQUFJLEVBQUUsT0FBRSxrQ0FDNEI7QUFHeEMsTUFBcUIsY0FBZSxTQUFRLDJCQUFhO0lBQXpEOztRQWVZLFdBQU0sR0FBWTtZQUN0QixtQkFBSyxDQUFDLEtBQUssRUFBSSxHQUFFO1lBQ2pCLG1CQUFLLENBQUMsR0FBRyxFQUFNLEdBQUU7WUFDakIsbUJBQUssQ0FBQyxLQUFLLEVBQUksR0FBRTtZQUNqQixtQkFBSyxDQUFDLElBQUksRUFBSyxHQUFFO1lBQ2pCLG1CQUFLLENBQUMsT0FBTyxFQUFFLEdBQUU7WUFDakIsbUJBQUssQ0FBQyxJQUFJLENBQUssR0FBRTtTQUNwQjtRQUNPLGVBQVUsR0FBVyxFQUFFO0lBZ0xuQztJQXhLSSxLQUFLLENBQUMsS0FBSztRQUNQLGdEQUErQztRQUMvQyxJQUFJLENBQUMsU0FBUyxFQUFFO1FBQ2hCLElBQUksQ0FBQyxVQUFVLENBQUMsWUFBWSxHQUFHLEtBQUs7UUFDcEMsc0RBQXFEO1FBQ3JELE1BQUssU0FBQyxxQ0FBZ0IsQ0FBQyxlQUFlLEVBQUMsQ0FBQztRQUN4QyxJQUFJLENBQUMsVUFBVSxHQUFHLE1BQUssU0FBQyxxQ0FBZ0IsQ0FBQyxtQkFBbUIsQ0FBQyxZQUFZLEVBQUUsSUFBSSxDQUFDLFNBQVMsRUFBRSxJQUFJLENBQUMsY0FBYSxDQUFDLENBQUM7UUFDL0csSUFBSSxDQUFDLFVBQVUsQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDLFdBQVcsR0FBRyxJQUFJLHFCQUFPLENBQUMsQ0FBQyxFQUFFLEdBQUcsRUFBRSxDQUFDLENBQUM7UUFDbkUsSUFBSSxDQUFDLFdBQVcsQ0FBQyxPQUFPLENBQUMsV0FBVyxPQUFDLElBQUksQ0FBQyxTQUFRLEVBQUMsQ0FBQztRQUNwRCxJQUFJLENBQUMsVUFBVSxDQUFDLE9BQU8sQ0FBQyxXQUFXLE9BQUMsSUFBSSxDQUFDLFNBQVEsRUFBQyxDQUFDO1FBQ25ELElBQUksQ0FBQyxVQUFVLENBQUMsWUFBWSxHQUFHLElBQUk7SUFDdkM7SUFFQSx3REFBdUQ7SUFDL0MsU0FBUztRQUNiLElBQUksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztJQUNwQztJQUVBLGlFQUFnRTtJQUN4RCxTQUFTO1FBQ2IsSUFBSSxJQUFJLENBQUMsVUFBVSxFQUFFO1lBQ2pCLElBQUksQ0FBQyxVQUFVLENBQUMsUUFBUSxDQUFDLFVBQVUsQ0FBQyxNQUFNLENBQUM7UUFDL0M7UUFFQSxJQUFJLENBQUMsWUFBWSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7UUFDakMsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQ2xDLElBQUksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQztRQUUvQixJQUFJLENBQUMsWUFBWSxHQUFHLENBQUM7UUFDckIsSUFBSSxDQUFDLFlBQVksR0FBRyxLQUFLO1FBQ3pCLElBQUksQ0FBQyxRQUFRLEdBQUcsRUFBRTtRQUVsQixLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQ3hCLElBQUksQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLEdBQUcsbUJBQUssQ0FBQyxLQUFLO1lBQUMsb0JBQU0sQ0FBQyx3QkFBSyxDQUFDLENBQUMsRUFBRSxJQUFJLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDO1FBQ3ZFO1FBRUEsT0FBTyxDQUFDLEdBQUcsQ0FBQyxZQUFZLEVBQUUsSUFBSSxDQUFDLFFBQVEsQ0FBQyxRQUFRLEVBQUUsQ0FBQztRQUVuRCxLQUFLLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFVBQVUsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN0QyxJQUFJLEdBQUcsR0FBRyxJQUFJLENBQUMsWUFBWSxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDO1lBQ2pELElBQUksV0FBVyxHQUFHLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLENBQUMsdUJBQXNCLFNBQUUsc0JBQUksRUFBSTtZQUNsRSxLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsV0FBVyxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtnQkFDeEMsV0FBVyxDQUFDLENBQUMsQ0FBQyxDQUFDLEtBQUssR0FBRyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQztZQUN6QztZQUNBLElBQUksY0FBYyxHQUFHLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLENBQUMsdUJBQXNCLFNBQUUsc0JBQUksRUFBSTtZQUNyRSxLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsY0FBYyxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtnQkFDM0MsY0FBYyxDQUFDLENBQUMsQ0FBQyxDQUFDLEtBQUssR0FBRyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQztZQUM1QztZQUNBLElBQUksWUFBWSxHQUFHLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLENBQUMsc0JBQXFCLFNBQUUsdUJBQUssRUFBSTtZQUNuRSxZQUFZLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7WUFDdkMsR0FBRyxDQUFDLFVBQVUsQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQ25DO1FBRUEsSUFBSSxDQUFDLFVBQVUsQ0FBQyxJQUFJLENBQUMsWUFBWSxDQUFDO0lBQ3RDO0lBRUEsNkRBQTREO0lBQ3BELFVBQVUsQ0FBQyxTQUFpQjtRQUNoQyxJQUFHLFNBQVMsSUFBSSxJQUFJLENBQUMsVUFBVSxJQUFJLFNBQVMsR0FBRyxDQUFDLEVBQUU7WUFDOUMsT0FBTyxDQUFDLEdBQUcsQ0FBQywrQkFBK0IsQ0FBQztZQUM1QyxPQUFNO1FBQ1Y7UUFDQSxJQUFJLEdBQUcsR0FBRyxJQUFJLENBQUMsWUFBWSxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsU0FBUyxDQUFDO1FBQ3pELEdBQUcsQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQztRQUM5QixJQUFJLFlBQVksR0FBRyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQyxDQUFDLHVCQUFzQixTQUFFLHVCQUFLLEVBQUk7UUFDcEUsWUFBWSxDQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsRUFBRTtZQUN2QixHQUFHLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxHQUFHLEVBQUU7Z0JBQ3pCLElBQUksVUFBVSxHQUFHLElBQUksQ0FBQyxhQUFhLENBQUMsR0FBRyxDQUFDLFVBQVUsQ0FBQyxZQUFXLFNBQUUsc0JBQUksRUFBSSxDQUFDLEtBQUssQ0FBQztnQkFDL0UsSUFBSSxjQUFjLEdBQUcsVUFBVSxHQUFHLENBQUMsR0FBRyxJQUFJLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsVUFBVSxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztnQkFDN0UsR0FBRyxDQUFDLFVBQVUsQ0FBQyxZQUFXLFNBQUUsc0JBQUksRUFBSSxDQUFDLEtBQUssR0FBRyxJQUFJLENBQUMsTUFBTSxDQUFDLGNBQWMsQ0FBQztZQUM1RSxDQUFDLENBQUM7UUFDTixDQUFDLENBQUM7UUFDRixJQUFJLFlBQVksR0FBRyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQyxDQUFDLHNCQUFxQixTQUFFLHVCQUFLLEVBQUk7UUFDbkUsWUFBWSxDQUFDLE9BQU8sQ0FBQyxXQUFXLE9BQUMsSUFBSSxDQUFDLFlBQVcsRUFBQyxDQUFDO0lBQ3ZEO0lBRUEsa0VBQWlFO0lBQ3pELFlBQVk7UUFDaEIsSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsWUFBWSxDQUFDO1FBQy9CLElBQUksQ0FBQyxjQUFjLENBQUMsSUFBSSxDQUFDLFlBQVksQ0FBQztRQUN0QyxJQUFHLElBQUksQ0FBQyxZQUFZLEVBQUU7WUFDbEIsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO1lBQ2pDLElBQUksQ0FBQyxXQUFXLENBQUMsSUFBSSxHQUFHLFNBQVM7WUFDakMsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1lBQ2xDLElBQUksQ0FBQyxVQUFVLENBQUMsUUFBUSxDQUFDLFVBQVUsQ0FBQyxPQUFPLENBQUM7UUFDaEQsQ0FBQzthQUFLLElBQUcsSUFBSSxDQUFDLFlBQVksSUFBSSxJQUFJLENBQUMsVUFBVSxHQUFHLENBQUMsRUFBRTtZQUMvQyxJQUFJLENBQUMsWUFBWSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7WUFDakMsSUFBSSxDQUFDLFdBQVcsQ0FBQyxJQUFJLEdBQUcsVUFBVTtZQUNsQyxJQUFJLENBQUMsWUFBWSxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7WUFDbEMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxRQUFRLENBQUMsVUFBVSxDQUFDLEtBQUssQ0FBQztRQUM5QyxDQUFDO2FBQUs7WUFDRixJQUFJLENBQUMsWUFBWSxHQUFHLElBQUksQ0FBQyxZQUFZLEdBQUcsQ0FBQztZQUN6QyxJQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxZQUFZLENBQUM7UUFDdEM7SUFDSjtJQUVBLDhEQUE2RDtJQUNyRCxjQUFjLENBQUMsU0FBaUI7UUFDcEMsSUFBRyxTQUFTLElBQUksSUFBSSxDQUFDLFVBQVUsSUFBSSxTQUFTLEdBQUcsQ0FBQyxFQUFFO1lBQzlDLE9BQU8sQ0FBQyxHQUFHLENBQUMsdUNBQXVDLENBQUM7WUFDcEQsT0FBTTtRQUNWO1FBQ0EsSUFBSSxHQUFHLEdBQUcsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLFNBQVMsQ0FBQztRQUN6RCxJQUFJLFdBQVcsR0FBRyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQyxDQUFDLHVCQUFzQixTQUFFLHNCQUFJLEVBQUk7UUFDbEUsSUFBSSxlQUFlLEdBQUcsRUFBRTtRQUN4QixJQUFJLFlBQVksR0FBRyxFQUFFO1FBQ3JCLEtBQUksSUFBSSxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxXQUFXLENBQUMsTUFBTSxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQ3hDLElBQUksR0FBRyxHQUFHLFdBQVcsQ0FBQyxDQUFDLENBQUM7WUFDeEIsSUFBSSxVQUFVLEdBQUcsSUFBSSxDQUFDLGFBQWEsQ0FBQyxHQUFHLENBQUMsS0FBSyxDQUFDO1lBQzlDLFlBQVksQ0FBQyxDQUFDLENBQUMsR0FBRyxVQUFVO1lBQzVCLGVBQWUsQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQztRQUN6QztRQUNBLElBQUksZUFBZSxHQUFHLENBQUM7UUFDdkIsSUFBSSxZQUFZLEdBQUcsQ0FBQztRQUNwQixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsWUFBWSxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN6QyxJQUFHLFlBQVksQ0FBQyxDQUFDLENBQUMsSUFBSSxlQUFlLENBQUMsQ0FBQyxDQUFDLEVBQUU7Z0JBQ3RDLGVBQWUsSUFBSSxDQUFDO2dCQUNwQixZQUFZLENBQUMsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDO2dCQUNwQixlQUFlLENBQUMsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDO1lBQzNCO1FBQ0o7UUFDQSxLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsWUFBWSxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN6QyxJQUFHLFlBQVksQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFDLENBQUMsSUFBSSxlQUFlLENBQUMsUUFBUSxDQUFDLFlBQVksQ0FBQyxDQUFDLENBQUMsQ0FBQyxFQUFFO2dCQUNuRSxZQUFZLElBQUksQ0FBQztnQkFDakIsZUFBZSxDQUFDLENBQUMsQ0FBQyxHQUFHLENBQUMsQ0FBQztZQUMzQjtRQUNKO1FBQ0EsSUFBRyxlQUFlLElBQUksQ0FBQyxFQUFFO1lBQ3JCLElBQUksQ0FBQyxZQUFZLEdBQUcsSUFBSTtRQUM1QjtRQUNBLElBQUksY0FBYyxHQUFHLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLENBQUMsdUJBQXNCLFNBQUUsc0JBQUksRUFBSTtRQUNyRSxLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsY0FBYyxDQUFDLE1BQU0sRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUMzQyxJQUFHLGVBQWUsR0FBRyxDQUFDLEVBQUU7Z0JBQ3BCLGNBQWMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxLQUFLLEdBQUcsbUJBQUssQ0FBQyxLQUFLO2dCQUNyQyxlQUFlLElBQUksQ0FBQztZQUN4QixDQUFDO2lCQUFLLElBQUcsWUFBWSxHQUFHLENBQUMsRUFBRTtnQkFDdkIsY0FBYyxDQUFDLENBQUMsQ0FBQyxDQUFDLEtBQUssR0FBRyxtQkFBSyxDQUFDLEdBQUc7Z0JBQ25DLFlBQVksSUFBSSxDQUFDO1lBQ3JCO1FBQ0o7SUFDSjtJQUVBLGtFQUFpRTtJQUN6RCxPQUFPLENBQUMsU0FBaUI7UUFDN0IsSUFBRyxTQUFTLElBQUksSUFBSSxDQUFDLFVBQVUsSUFBSSxTQUFTLEdBQUcsQ0FBQyxFQUFFO1lBQzlDLE9BQU8sQ0FBQyxHQUFHLENBQUMsNEJBQTRCLENBQUM7WUFDekMsT0FBTTtRQUNWO1FBQ0EsSUFBSSxHQUFHLEdBQUcsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLFNBQVMsQ0FBQztRQUN6RCxJQUFJLFlBQVksR0FBRyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQyxDQUFDLHVCQUFzQixTQUFFLHVCQUFLLEVBQUk7UUFDcEUsWUFBWSxDQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsRUFBRTtZQUN2QixHQUFHLENBQUMsT0FBTyxDQUFDLGtCQUFrQixFQUFFO1FBQ3BDLENBQUMsQ0FBQztRQUNGLElBQUksWUFBWSxHQUFHLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLENBQUMsc0JBQXFCLFNBQUUsdUJBQUssRUFBSTtRQUNuRSxZQUFZLENBQUMsT0FBTyxDQUFDLGtCQUFrQixFQUFFO1FBQ3pDLFlBQVksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztJQUM1QztJQUVBLDRDQUEyQztJQUNuQyxhQUFhLENBQUMsS0FBWTtRQUM5QixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUUsQ0FBQyxFQUFFLEVBQUU7WUFDeEMsSUFBSSxDQUFDLEdBQUcsSUFBSSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUM7WUFDdEIsSUFBRSxnQ0FBQyxHQUFLLEtBQUksQ0FBQyxFQUFFO2dCQUNYLE9BQU8sQ0FBQztZQUNaO1FBQ0o7UUFDQSxPQUFPLENBQUM7SUFDWjtDQUNKO0FBdk1BLGlDQXVNQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiR2FtZUNvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"6eeeda7d2d7ef97ba900038b75f88de6","Specifier":"@assets/Experience/7
+    Master-Mind/GameController","DefaultTypeName":"@assets/Experience/7 Master-Mind/GameController.GameController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/7
+    Master-Mind/GameController.GameController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"decoderPanel","Name":"decoderPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"UI
+    Objects\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Decoder
+    Panel"},{"Path":"resultsPanel","Name":"resultsPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Results
+    Panel"},{"Path":"resultsText","Name":"resultsText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Results
+    Text"},{"Path":"retryButton","Name":"retryButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Retry
+    Button"},{"Path":"titlePanel","Name":"titlePanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Title
+    Panel"},{"Path":"playButton","Name":"playButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Play
+    Button"},{"Path":"playerAnimator","Name":"playerAnimator","TypeName":"UnityEngine.RuntimeAnimatorController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Player
+    Animations\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Animator"}],"SupportedUiEvents":0,"DisplayName":"GameController","name":"GameController","hideFlags":8}'

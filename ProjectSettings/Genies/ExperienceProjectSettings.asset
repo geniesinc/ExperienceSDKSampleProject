@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 53
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e598a87c3578d4756922b5824a9f6228, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SerializedEnv: 1
+  ProdBuildProfiles:
+    Profiles:
+    - ProfileID: 2bb63762-fc23-4cef-aaca-7826161eb415
+      ProfileName: New Profile
+      BuildSettings:
+        experienceSku: eyJleHBlcmllbmNlSUQiOiJjMjU2NDIzYi05YjI5LTRiNzItYTEyNC05YWU1MGE1OWVjYjciLCJDbGllbnRJZCI6InU1andGckNyVzNWU2lDa0d2aGhCY2c9PSIsIkNsaWVudFNlY3JldCI6ImRkOXFTWlZoVWUwdEd5YnNwYTJ2OTJXZ0VXdTdiUFQ0NkJTeUdka0V1SkE9In0=
+        experienceManifestInfo:
+          experienceID: c256423b-9b29-4b72-a124-9ae50a59ecb7
+          ClientId: u5jwFrCrW3VSiCkGvhhBcg==
+          ClientSecret: dd9qSZVhUe0tGybspa2v92WgEWu7bPT46BSyGdkEuJA=
+        mainScene:
+          sceneReference: {fileID: 0}
+          sceneName: 
+          scenePath: 
+          buildIndex: -1
+        ExperienceImages:
+          Thumbnail: {fileID: 0}
+          GameIcon: {fileID: 0}
+          GameBackground: {fileID: 0}
+        experienceQualityLevel: 0
+        platformToggleConfig:
+          iOS: 1
+          Android: 1
+          StandaloneOSX: 1
+          StandaloneWindows64: 1
+        _traitsListString: '[]'
+        Archetypes: []
+        GradientColorStart: {r: 0, g: 0, b: 0, a: 0}
+        GradientColorEnd: {r: 0, g: 0, b: 0, a: 0}
+      ManualSkuOverride: 0
+      Sku: 
+    ActiveProfileID: 2bb63762-fc23-4cef-aaca-7826161eb415
+  DevBuildProfiles:
+    Profiles:
+    - ProfileID: 7163adfd-3d2a-4394-85b4-65328abdd961
+      ProfileName: New Profile
+      BuildSettings:
+        experienceSku: 
+        experienceManifestInfo:
+          experienceID: 
+          ClientId: 
+          ClientSecret: 
+        mainScene:
+          sceneReference: {fileID: 0}
+          sceneName: 
+          scenePath: 
+          buildIndex: -1
+        ExperienceImages:
+          Thumbnail: {fileID: 0}
+          GameIcon: {fileID: 0}
+          GameBackground: {fileID: 0}
+        experienceQualityLevel: 0
+        platformToggleConfig:
+          iOS: 1
+          Android: 1
+          StandaloneOSX: 1
+          StandaloneWindows64: 1
+        _traitsListString: '[]'
+        Archetypes: []
+        GradientColorStart: {r: 0, g: 0, b: 0, a: 0}
+        GradientColorEnd: {r: 0, g: 0, b: 0, a: 0}
+      ManualSkuOverride: 0
+      Sku: 
+    ActiveProfileID: 7163adfd-3d2a-4394-85b4-65328abdd961

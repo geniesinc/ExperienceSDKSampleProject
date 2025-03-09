@@ -1,0 +1,91 @@
+fileFormatVersion: 2
+guid: a8ecc0ff452304eee9647478df7ede7c
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/GameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Avatars_Sdk_1 = require(\"Genies.Avatars.Sdk\");\nconst GameManager_1
+    = require(\"@assets/Experience/1 InfiniteRunnerFull/Scripts/GameManager\");\nconst
+    Cysharp_Threading_Tasks_1 = require(\"Cysharp.Threading.Tasks\");\nconst _UniTask_1_GeniesAvatar
+    = $generic(Cysharp_Threading_Tasks_1.UniTask$1, $typeof(\"Genies.Avatars.Sdk.GeniesAvatar\"));\nclass
+    PlayerController extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.playerSpeed = 2;\n        this.jumpForce =
+    5;\n        this.swipeThreshold = 50.0; // Minimum swipe distance\n        /**\n        
+    * This can only be one of three lanes the player can target to move:\n        
+    * * -1 is the left lane\n         * * 0 is the middle lane\n         * * 1 is
+    the right lane\n        */\n        this.targetLane = 0;\n        this.swipeDetected
+    = false;\n        this.canMove = false;\n    }\n    async Start() {\n       
+    //Get GameManager singleton and add a listener to OnGameStateChange event\n       
+    this.gameManager = GameManager_1.default.Instance;\n        this.gameManager.OnGameStateChange.addListener(this.CheckGameState,
+    //@ts-ignore\n        this);\n        //Initialize the SDK\n        await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.InitializeAsync());\n       
+    //Load the user Avatar\n        this.userAvatar = await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.LoadUserAvatarAsync(\"UserAvatar\",
+    this.transform, this.playerAnimator));\n        this.StartCoroutine(this.WaitForAvatar());\n       
+    this.playerRigidbody = this.GetComponent($typeof(UnityEngine_1.Rigidbody));\n   
+    }\n    Update() {\n        //If game is playing, check for touch swipe and move
+    player accordingly\n        if (this.canMove) {\n            this.CheckSwipe();\n           
+    this.MovePlayer();\n        }\n    }\n    /** Manages the player logic when the
+    game state changes. @param newState */\n    CheckGameState(newState) {\n       
+    switch (newState) {\n            case GameManager_1.GameState.GAME_PLAY:\n               
+    this.OnGamePlay();\n                break;\n            case GameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** This will
+    manage the player once the game starts. */\n    OnGamePlay() {\n        this.canMove
+    = true;\n        //this.transform.position = Vector3.zero;\n        this.targetLane
+    = 0;\n        // @ts-ignore\n        this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (1));\n    }\n    /** Determines if the mouse swipes and sets a new target lane
+    based on direction. */\n    CheckSwipe() {\n        if (UnityEngine_1.Input.touchCount
+    > 0) {\n            let touch = UnityEngine_1.Input.GetTouch(0);\n           
+    switch (touch.phase) {\n                case UnityEngine_1.TouchPhase.Began:\n                   
+    this.startTouchPosition = touch.position;\n                    this.swipeDetected
+    = false;\n                    break;\n                case UnityEngine_1.TouchPhase.Moved:\n                   
+    this.currentTouchPosition = touch.position;\n                    let deltaPosition
+    = UnityEngine_1.Vector2.op_Subtraction(this.currentTouchPosition, this.startTouchPosition);\n                   
+    if (deltaPosition.magnitude > this.swipeThreshold && !this.swipeDetected) {\n                       
+    let x = deltaPosition.x;\n                        let y = deltaPosition.y;\n                       
+    if ( // @ts-ignore\n                        UnityEngine_1.Mathf.Abs_EBB7509C_H82424F3E(x)
+    > // @ts-ignore\n                            UnityEngine_1.Mathf.Abs_EBB7509C_H82424F3E(y))
+    {\n                            if (x > 0) {\n                               
+    this.OnSwipeRight();\n                            }\n                           
+    else {\n                                this.OnSwipeLeft();\n                           
+    }\n                        }\n                        this.startTouchPosition
+    = this.currentTouchPosition; //prevent multiple swipes from one touch.\n                       
+    this.swipeDetected = true;\n                    }\n                    break;\n               
+    case UnityEngine_1.TouchPhase.Ended:\n                    this.swipeDetected
+    = false;\n                    break;\n                case UnityEngine_1.TouchPhase.Canceled:\n                   
+    this.swipeDetected = false;\n                    break;\n            }\n       
+    }\n    }\n    OnSwipeRight() {\n        if (this.targetLane < 1) {\n           
+    this.targetLane++;\n        }\n    }\n    OnSwipeLeft() {\n        if (this.targetLane
+    > -1) {\n            this.targetLane--;\n        }\n    }\n    /** Moves the
+    player towards the target lane. */\n    MovePlayer() {\n        let playerPos
+    = this.transform.position;\n        let targetPos = new UnityEngine_1.Vector3(this.targetLane,
+    playerPos.y, playerPos.z);\n        let newPos = UnityEngine_1.Vector3.MoveTowards(playerPos,
+    targetPos, this.playerSpeed * UnityEngine_1.Time.deltaTime);\n        this.transform.position
+    = newPos;\n    }\n    OnTriggerEnter(coll) {\n        //End game if colliding
+    with enemy\n        if (coll.gameObject.tag == \"Enemy\") {\n            coll.gameObject.SetActive(false);\n           
+    this.canMove = false;\n            // @ts-ignore\n            this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (0));\n            this.userAvatar.Animator.SetTrigger(\"slip\");\n           
+    this.gameManager.ChangeGameState(GameManager_1.GameState.GAME_OVER);\n       
+    }\n    }\n    OnCollisionEnter(coll) {\n        //End game if colliding with
+    enemy\n        if (coll.gameObject.tag == \"Enemy\") {\n            coll.gameObject.SetActive(false);\n           
+    this.canMove = false;\n            // @ts-ignore\n            this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (0));\n            this.userAvatar.Animator.SetTrigger(\"slip\");\n           
+    this.gameManager.ChangeGameState(GameManager_1.GameState.GAME_OVER);\n       
+    }\n    }\n    /** This will manage the player once the game ends. */\n    OnGameOver()
+    {\n        // Not implemented\n    }\n    *WaitForAvatar() {\n        while (!this.userAvatar)
+    {\n            yield null;\n        }\n        UnityEngine_1.Debug.Log(\"Avatar
+    Loaded\");\n        this.gameManager.ChangeGameState(GameManager_1.GameState.LOADING);\n   
+    }\n}\nexports.default = PlayerController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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LEdBQUcsa0JBQUksQ0FBQyxTQUFTLENBQUM7UUFDekYsSUFBSSxDQUFDLFNBQVMsQ0FBQyxRQUFRLEdBQUcsTUFBTTtJQUNwQztJQUVBLGNBQWMsQ0FBQyxJQUFjO1FBQ3pCLGtDQUFpQztRQUNqQyxJQUFJLElBQUksQ0FBQyxVQUFVLENBQUMsR0FBRyxJQUFJLE9BQU8sRUFBRTtZQUNoQyxJQUFJLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7WUFFaEMsSUFBSSxDQUFDLE9BQU8sR0FBRyxLQUFLO1lBQ3JCO1lBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxRQUFRLENBQUMsMkJBQU8sQ0FBQyxDQUFDLGVBQWMsQ0FBQyxHQUFFLEVBQUMsQ0FBQztZQUNyRCxJQUFJLENBQUMsVUFBVSxDQUFDLFFBQVEsQ0FBQyxVQUFVLENBQUMsTUFBTSxDQUFDO1lBRTNDLElBQUksQ0FBQyxXQUFXLENBQUMsZUFBZSxDQUFDLHVCQUFTLENBQUMsU0FBUyxDQUFDO1FBQ3pEO0lBQ0o7SUFHQSxnQkFBZ0IsQ0FBQyxJQUFlO1FBQzVCLGtDQUFpQztRQUNqQyxJQUFJLElBQUksQ0FBQyxVQUFVLENBQUMsR0FBRyxJQUFJLE9BQU8sRUFBRTtZQUNoQyxJQUFJLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7WUFFaEMsSUFBSSxDQUFDLE9BQU8sR0FBRyxLQUFLO1lBQ3JCO1lBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxRQUFRLENBQUMsMkJBQU8sQ0FBQyxDQUFDLGVBQWMsQ0FBQyxHQUFFLEVBQUMsQ0FBQztZQUNyRCxJQUFJLENBQUMsVUFBVSxDQUFDLFFBQVEsQ0FBQyxVQUFVLENBQUMsTUFBTSxDQUFDO1lBRTNDLElBQUksQ0FBQyxXQUFXLENBQUMsZUFBZSxDQUFDLHVCQUFTLENBQUMsU0FBUyxDQUFDO1FBQ3pEO0lBQ0o7SUFFQSxzREFBcUQ7SUFDN0MsVUFBVTtRQUNkLGtCQUFpQjtJQUNyQjtJQUVRLENBQUMsYUFBYTtRQUNsQixPQUFNLENBQUMsSUFBSSxDQUFDLFVBQVUsRUFBRTtZQUNwQixNQUFNLElBQUk7UUFDZDtRQUNBLG1CQUFLLENBQUMsR0FBRyxDQUFDLGVBQWUsQ0FBQztRQUMxQixJQUFJLENBQUMsV0FBVyxDQUFDLGVBQWUsQ0FBQyx1QkFBUyxDQUFDLE9BQU8sQ0FBQztJQUN2RDtDQUdKO0FBbkxBLG1DQW1MQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiUGxheWVyQ29udHJvbGxlci50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"16cea76702b180b45e16d3ece1650eb9","Specifier":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/PlayerController","DefaultTypeName":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/PlayerController.PlayerController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/PlayerController.PlayerController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"playerSpeed","Name":"playerSpeed","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Player
+    Settings\""]},{"Type":"SerializeField","Args":[]}],"Initializers":["2"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Speed"},{"Path":"jumpForce","Name":"jumpForce","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["5"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Jump
+    Force"},{"Path":"playerAnimator","Name":"playerAnimator","TypeName":"UnityEngine.RuntimeAnimatorController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Animator"},{"Path":"swipeThreshold","Name":"swipeThreshold","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["50.0"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Swipe
+    Threshold"}],"SupportedUiEvents":0,"DisplayName":"PlayerController","name":"PlayerController","hideFlags":8}'

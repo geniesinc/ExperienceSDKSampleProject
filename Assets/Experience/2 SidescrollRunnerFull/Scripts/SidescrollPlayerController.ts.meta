@@ -1,0 +1,81 @@
+fileFormatVersion: 2
+guid: bf35fc2c3078f4ab6955ba0ee0514bb9
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollGameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Avatars_Sdk_1 = require(\"Genies.Avatars.Sdk\");\nconst SidescrollGameManager_1
+    = require(\"@assets/Experience/2 SidescrollRunnerFull/Scripts/SidescrollGameManager\");\nconst
+    Cysharp_Threading_Tasks_1 = require(\"Cysharp.Threading.Tasks\");\nconst _UniTask_1_GeniesAvatar
+    = $generic(Cysharp_Threading_Tasks_1.UniTask$1, $typeof(\"Genies.Avatars.Sdk.GeniesAvatar\"));\nclass
+    SidescrollPlayerController extends UnityEngine_1.MonoBehaviour {\n    constructor()
+    {\n        super(...arguments);\n        this.playerSpeed = 2;\n        this.jumpForce
+    = 5;\n        this.swipeThreshold = 50.0; // Minimum swipe distance\n       
+    this.swipeDetected = false;\n        this.canMove = false;\n    }\n    async
+    Start() {\n        //Get GameManager singleton and add a listener to OnGameStateChange
+    event\n        this.gameManager = SidescrollGameManager_1.default.Instance;\n       
+    this.gameManager.OnGameStateChange.addListener(this.CheckGameState, //@ts-ignore\n       
+    this);\n        //Initialize the SDK\n        await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.InitializeAsync());\n       
+    //Load the user Avatar\n        this.userAvatar = await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.LoadUserAvatarAsync(\"UserAvatar\",
+    this.transform, this.playerAnimator));\n        this.StartCoroutine(this.WaitForAvatar());\n       
+    this.playerRigidbody = this.GetComponent($typeof(UnityEngine_1.Rigidbody));\n   
+    }\n    Update() {\n        //If game is playing, check for touch swipe and move
+    player accordingly\n        if (this.canMove) {\n            this.CheckSwipe();\n       
+    }\n    }\n    /** Manages the player logic when the game state changes. @param
+    newState */\n    CheckGameState(newState) {\n        switch (newState) {\n           
+    case SidescrollGameManager_1.GameState.GAME_PLAY:\n                this.OnGamePlay();\n               
+    break;\n            case SidescrollGameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** This will
+    manage the player once the game starts. */\n    OnGamePlay() {\n        this.canMove
+    = true;\n        // @ts-ignore\n        this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (1));\n    }\n    /** Determines if the mouse swipes and sets a new target lane
+    based on direction. */\n    CheckSwipe() {\n        if (UnityEngine_1.Input.touchCount
+    > 0) {\n            let touch = UnityEngine_1.Input.GetTouch(0);\n           
+    switch (touch.phase) {\n                case UnityEngine_1.TouchPhase.Began:\n                   
+    this.startTouchPosition = touch.position;\n                    this.swipeDetected
+    = false;\n                    break;\n                case UnityEngine_1.TouchPhase.Moved:\n                   
+    this.currentTouchPosition = touch.position;\n                    let deltaPosition
+    = UnityEngine_1.Vector2.op_Subtraction(this.currentTouchPosition, this.startTouchPosition);\n                   
+    if (deltaPosition.magnitude > this.swipeThreshold && !this.swipeDetected) {\n                       
+    let x = deltaPosition.x;\n                        let y = deltaPosition.y;\n                       
+    if ( // @ts-ignore\n                        UnityEngine_1.Mathf.Abs_EBB7509C_H82424F3E(y)
+    > // @ts-ignore\n                            UnityEngine_1.Mathf.Abs_EBB7509C_H82424F3E(x))
+    {\n                            if (y > 0) {\n                               
+    UnityEngine_1.Debug.Log(\"Swipe Up\");\n                                this.OnSwipeUp();\n                           
+    }\n                            else {\n                                UnityEngine_1.Debug.Log(\"Swipe
+    Down\");\n                                this.OnSwipeDown();\n                           
+    }\n                        }\n                        this.startTouchPosition
+    = this.currentTouchPosition; //prevent multiple swipes from one touch.\n                       
+    this.swipeDetected = true;\n                    }\n                    break;\n               
+    case UnityEngine_1.TouchPhase.Ended:\n                    this.swipeDetected
+    = false;\n                    break;\n                case UnityEngine_1.TouchPhase.Canceled:\n                   
+    this.swipeDetected = false;\n                    break;\n            }\n       
+    }\n    }\n    OnSwipeUp() {\n        this.playerRigidbody.AddForce(// @ts-ignore\n       
+    UnityEngine_1.Vector3.op_Multiply_EBB7509C_H75CC56AF(UnityEngine_1.Vector3.up,
+    this.jumpForce), UnityEngine_1.ForceMode.Impulse);\n    }\n    OnSwipeDown()
+    {\n        //Not implemented\n    }\n    OnCollisionEnter(coll) {\n        //End
+    game if colliding with enemy\n        if (coll.gameObject.tag == \"Enemy\") {\n           
+    coll.gameObject.SetActive(false);\n            this.canMove = false;\n           
+    // @ts-ignore\n            this.userAvatar.Animator.SetFloat_EBB7509C_H45FF9778((\"idle_run_walk\"),
+    (0));\n            this.userAvatar.Animator.SetTrigger(\"slip\");\n           
+    this.gameManager.ChangeGameState(SidescrollGameManager_1.GameState.GAME_OVER);\n       
+    }\n    }\n    /** This will manage the player once the game ends. */\n    OnGameOver()
+    {\n        // Not implemented\n    }\n    *WaitForAvatar() {\n        while (!this.userAvatar)
+    {\n            yield null;\n        }\n        UnityEngine_1.Debug.Log(\"Avatar
+    Loaded\");\n        this.gameManager.ChangeGameState(SidescrollGameManager_1.GameState.LOADING);\n   
+    }\n}\nexports.default = SidescrollPlayerController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiU2lkZXNjcm9sbFBsYXllckNvbnRyb2xsZXIuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSw2Q0FBMk07QUFFM00sMkRBQW1FO0FBQ25FLG1IQUEyRTs7O0FBRTNFLE1BQXFCLDBCQUEyQixTQUFRLDJCQUFhO0lBQXJFOztRQUdZLGdCQUFXLEdBQVUsQ0FBQyxDQUFDO1FBQ3ZCLGNBQVMsR0FBVyxDQUFDLENBQUM7UUFFdEIsbUJBQWMsR0FBVyxJQUFJLENBQUMsQ0FBQyx5QkFBeUI7UUFJeEQsa0JBQWEsR0FBVSxLQUFLO1FBTzVCLFlBQU8sR0FBVSxLQUFLO0lBOEhsQztJQTVISSxLQUFLLENBQUMsS0FBSztRQUNQLHlFQUF3RTtRQUN4RSxJQUFJLENBQUMsV0FBVyxHQUFHLCtCQUFxQixDQUFDLFFBQVE7UUFDakQsSUFBSSxDQUFDLFdBQVcsQ0FBQyxpQkFBaUIsQ0FBQyxXQUFXLENBQUMsSUFBSSxDQUFDLGNBQWE7WUFBQyxDQUFDO1FBQ25FLG9CQUFtQjtRQUNuQixNQUFLLFNBQUMscUNBQWdCLENBQUMsZUFBZSxFQUFDLENBQUM7UUFDeEMsc0JBQXFCO1FBQ3JCLElBQUksQ0FBQyxVQUFVLEdBQUcsTUFBSyxTQUFDLHFDQUFnQixDQUFDLG1CQUFtQixDQUFDLFlBQVksRUFBRSxJQUFJLENBQUMsU0FBUyxFQUFFLElBQUksQ0FBQyxjQUFjLEVBQUM7UUFFL0csSUFBSSxDQUFDLGNBQWMsQ0FBQyxJQUFJLENBQUMsYUFBYSxFQUFFLENBQUM7UUFFekMsSUFBSSxDQUFDLGVBQWUsR0FBRyxJQUFJLENBQUMsWUFBVyxTQUFFLHVCQUFRLEVBQUk7SUFDekQ7SUFFQSxNQUFNO1FBQ0YsdUVBQXNFO1FBQ3RFLElBQUcsSUFBSSxDQUFDLE9BQU8sRUFBRTtZQUNiLElBQUksQ0FBQyxVQUFVLEVBQUU7UUFDckI7SUFDSjtJQUVBLDRFQUEyRTtJQUNuRSxjQUFjLENBQUMsUUFBbUI7UUFDdEMsUUFBTyxRQUFRLEVBQUU7WUFDYixLQUFLLGlDQUFTLENBQUMsU0FBUztnQkFDcEIsSUFBSSxDQUFDLFVBQVUsRUFBRTtnQkFDakIsTUFBSztZQUNULEtBQUssaUNBQVMsQ0FBQyxTQUFTO2dCQUNwQixJQUFJLENBQUMsVUFBVSxFQUFFO2dCQUNqQixNQUFLO1FBQ2I7SUFDSjtJQUVBLHdEQUF1RDtJQUMvQyxVQUFVO1FBQ2QsSUFBSSxDQUFDLE9BQU8sR0FBRyxJQUFJO1FBQ3BCO1FBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxRQUFRLENBQUMsMkJBQU8sQ0FBQyxDQUFDLGVBQWMsQ0FBQyxHQUFFLEVBQUMsQ0FBQztJQUN6RDtJQUVBLG9GQUFtRjtJQUMzRSxVQUFVO1FBQ2QsSUFBSSxtQkFBSyxDQUFDLFVBQVUsR0FBRyxDQUFDLEVBQ3BCO1lBQ0ksSUFBSSxLQUFLLEdBQVcsbUJBQUssQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDO1lBRXJDLFFBQVEsS0FBSyxDQUFDLEtBQUssRUFDbkI7Z0JBQ0ksS0FBSyx3QkFBVSxDQUFDLEtBQUs7b0JBQ2pCLElBQUksQ0FBQyxrQkFBa0IsR0FBRyxLQUFLLENBQUMsUUFBUTtvQkFDeEMsSUFBSSxDQUFDLGFBQWEsR0FBRyxLQUFLO29CQUMxQixNQUFLO2dCQUVULEtBQUssd0JBQVUsQ0FBQyxLQUFLO29CQUNqQixJQUFJLENBQUMsb0JBQW9CLEdBQUcsS0FBSyxDQUFDLFFBQVE7b0JBQzFDLElBQUksYUFBYSxHQUFZLHFDQUFDLElBQUksQ0FBQyxvQkFBbUIsRUFBSSxJQUFJLENBQUMsa0JBQWlCLENBQUM7b0JBRWpGLElBQUssYUFBYSxDQUFDLFNBQVMsR0FBRyxJQUFJLENBQUMsY0FBYyxJQUFJLENBQUMsSUFBSSxDQUFDLGFBQWEsRUFDekU7d0JBQ0ksSUFBSSxDQUFDLEdBQUcsYUFBYSxDQUFDLENBQUM7d0JBQ3ZCLElBQUksQ0FBQyxHQUFHLGFBQWEsQ0FBQyxDQUFDO3dCQUV2QixLQUFHO3dCQUFDLG1CQUFLLENBQUMsc0JBQUcsQ0FBQyxDQUFDLENBQUMsR0FBRTs0QkFBQyxtQkFBSyxDQUFDLHNCQUFHLENBQUMsQ0FBQyxDQUFDLEVBQy9COzRCQUNJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFDVDtnQ0FDSSxtQkFBSyxDQUFDLEdBQUcsQ0FBQyxVQUFVLENBQUM7Z0NBQ3JCLElBQUksQ0FBQyxTQUFTLEVBQUU7NEJBQ3BCO2lDQUVBO2dDQUNJLG1CQUFLLENBQUMsR0FBRyxDQUFDLFlBQVksQ0FBQztnQ0FDdkIsSUFBSSxDQUFDLFdBQVcsRUFBRTs0QkFDdEI7d0JBQ0o7d0JBQ0EsSUFBSSxDQUFDLGtCQUFrQixHQUFHLElBQUksQ0FBQyxvQkFBb0IsQ0FBQyxDQUFDLHlDQUF3Qzt3QkFDN0YsSUFBSSxDQUFDLGFBQWEsR0FBRyxJQUFJO29CQUM3QjtvQkFDQSxNQUFLO2dCQUVULEtBQUssd0JBQVUsQ0FBQyxLQUFLO29CQUNqQixJQUFJLENBQUMsYUFBYSxHQUFHLEtBQUs7b0JBQzFCLE1BQUs7Z0JBQ1QsS0FBSyx3QkFBVSxDQUFDLFFBQVE7b0JBQ3BCLElBQUksQ0FBQyxhQUFhLEdBQUcsS0FBSztvQkFDMUIsTUFBSztZQUNiO1FBQ0o7SUFDUjtJQUVRLFNBQVM7UUFDYixJQUFJLENBQUMsZUFBZSxDQUFDLFFBQVE7UUFBQyxxQkFBTywrQkFBRSwyQkFBSSxJQUFJLENBQUMsU0FBUSxDQUFDLEVBQUUsdUJBQVMsQ0FBQyxPQUFPLENBQUM7SUFDakY7SUFFUSxXQUFXO1FBQ2YsaUJBQWdCO0lBQ3BCO0lBRUEsZ0JBQWdCLENBQUMsSUFBZTtRQUM1QixrQ0FBaUM7UUFDakMsSUFBSSxJQUFJLENBQUMsVUFBVSxDQUFDLEdBQUcsSUFBSSxPQUFPLEVBQUU7WUFDaEMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1lBRWhDLElBQUksQ0FBQyxPQUFPLEdBQUcsS0FBSztZQUNyQjtZQUFDLElBQUksQ0FBQyxVQUFVLENBQUMsUUFBUSxDQUFDLDJCQUFPLENBQUMsQ0FBQyxlQUFjLENBQUMsR0FBRSxFQUFDLENBQUM7WUFDckQsSUFBSSxDQUFDLFVBQVUsQ0FBQyxRQUFRLENBQUMsVUFBVSxDQUFDLE1BQU0sQ0FBQztZQUUzQyxJQUFJLENBQUMsV0FBVyxDQUFDLGVBQWUsQ0FBQyxpQ0FBUyxDQUFDLFNBQVMsQ0FBQztRQUN6RDtJQUNKO0lBRUEsc0RBQXFEO0lBQzdDLFVBQVU7UUFDZCxrQkFBaUI7SUFDckI7SUFFUSxDQUFDLGFBQWE7UUFDbEIsT0FBTSxDQUFDLElBQUksQ0FBQyxVQUFVLEVBQUU7WUFDcEIsTUFBTSxJQUFJO1FBQ2Q7UUFDQSxtQkFBSyxDQUFDLEdBQUcsQ0FBQyxlQUFlLENBQUM7UUFDMUIsSUFBSSxDQUFDLFdBQVcsQ0FBQyxlQUFlLENBQUMsaUNBQVMsQ0FBQyxPQUFPLENBQUM7SUFDdkQ7Q0FHSjtBQS9JQSw2Q0ErSUEiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIlNpZGVzY3JvbGxQbGF5ZXJDb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"28f68007ad7e6e1209c87e3b365580de","Specifier":"@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollPlayerController","DefaultTypeName":"@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollPlayerController.SidescrollPlayerController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollPlayerController.SidescrollPlayerController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"playerSpeed","Name":"playerSpeed","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Player
+    Settings\""]},{"Type":"SerializeField","Args":[]}],"Initializers":["2"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Speed"},{"Path":"jumpForce","Name":"jumpForce","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["5"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Jump
+    Force"},{"Path":"playerAnimator","Name":"playerAnimator","TypeName":"UnityEngine.RuntimeAnimatorController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Player
+    Animator"},{"Path":"swipeThreshold","Name":"swipeThreshold","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["50.0"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Swipe
+    Threshold"}],"SupportedUiEvents":0,"DisplayName":"SidescrollPlayerController","name":"SidescrollPlayerController","hideFlags":8}'

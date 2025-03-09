@@ -1,0 +1,64 @@
+fileFormatVersion: 2
+guid: 24e62ca936e20e44aaf08d4e570504f5
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/4
+    Basketball/Scripts/BasketballGameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    BasketballGameManager_1 = require(\"@assets/Experience/4 Basketball/Scripts/BasketballGameManager\");\nclass
+    CanvasController extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.timeAmount = 10;\n        this.score = 0;\n       
+    this.timer = 0;\n        this.startTime = false;\n    }\n    Start() {\n       
+    //Get GameManager singleton and add listeners to events\n        this.gameManager
+    = BasketballGameManager_1.default.Instance;\n        this.gameManager.OnGameStateChange.addListener(this.CheckGameState,
+    //@ts-ignore\n        this);\n        this.gameManager.OnShotMade.addListener(this.ShotMade,
+    //@ts-ignore\n        this);\n        this.retryButton.onClick.AddListener(()
+    => { this.gameManager.ChangeGameState(BasketballGameManager_1.GameState.GAME_PLAY);
+    });\n    }\n    Update() {\n        //If the timer has started, run the timer\n       
+    if (this.startTime) {\n            this.RunTimer();\n        }\n    }\n    /**
+    Runs the timer down and checks if time runs out */\n    RunTimer() {\n       
+    this.timer -= UnityEngine_1.Time.deltaTime;\n        if (this.timer <= 0) {\n           
+    this.gameManager.ChangeGameState(BasketballGameManager_1.GameState.GAME_OVER);\n       
+    }\n        this.DisplayTimer();\n    }\n    /** Manages the player logic when
+    the game state changes. @param newState */\n    CheckGameState(newState) {\n       
+    switch (newState) {\n            case BasketballGameManager_1.GameState.GAME_PLAY:\n               
+    this.OnGamePlay();\n                break;\n            case BasketballGameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** Resets
+    the UI for the start of the game */\n    OnGamePlay() {\n        this.topPanel.SetActive(false);\n       
+    this.midPanel.SetActive(false);\n        this.score = 0;\n        this.timer
+    = this.timeAmount;\n        this.DisplayScore();\n        this.DisplayTimer();\n       
+    this.startTime = true;\n    }\n    /** Displays the Game Over UI */\n    OnGameOver()
+    {\n        this.timer = 0;\n        this.DisplayTimer();\n        this.startTime
+    = false;\n        this.StartCoroutine(this.DisplayGameOver());\n    }\n    /**
+    Increases the score by 1 and updates UI */\n    ShotMade() {\n        this.score
+    += 1;\n        this.DisplayScore();\n        this.StartCoroutine(this.DisplayNiceShot());\n   
+    }\n    /** Displays the timer UI */\n    DisplayTimer() {\n        let seconds
+    = UnityEngine_1.Mathf.FloorToInt(this.timer);\n        let milliseconds = UnityEngine_1.Mathf.FloorToInt((this.timer
+    * 100) % 100);\n        let str1 = seconds.toString().padStart(2, \"0\");\n       
+    let str2 = milliseconds.toString().padStart(2, \"0\");\n        this.timerText.text
+    = str1 + \":\" + str2;\n    }\n    /** Displays the score UI */\n    DisplayScore()
+    {\n        let str = this.score.toString();\n        str = str.padStart(5, \"0\");\n       
+    this.scoreText.text = str;\n    }\n    /** Display the \"nice shot\" UI */\n   
+    *DisplayNiceShot() {\n        this.topPanel.SetActive(true);\n        this.bannerText.text
+    = \"nice shot\";\n        yield new UnityEngine_1.WaitForSeconds(0.5);\n       
+    this.topPanel.SetActive(false);\n    }\n    /** Displays the \"game over\" UI
+    */\n    *DisplayGameOver() {\n        yield new UnityEngine_1.WaitForSeconds(1.5);\n       
+    this.topPanel.SetActive(true);\n        this.bannerText.text = \"game over\";\n       
+    yield new UnityEngine_1.WaitForSeconds(1.5);\n        this.midPanel.SetActive(true);\n   
+    }\n}\nexports.default = CanvasController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ2FudmFzQ29udHJvbGxlci5qcyIsIm1hcHBpbmdzIjoiOztBQUFBLDZDQUFvRjtBQUdwRix5R0FBMEU7QUFFMUUsTUFBcUIsZ0JBQWlCLFNBQVEsMkJBQWE7SUFBM0Q7O1FBV1ksZUFBVSxHQUFHLEVBQUUsQ0FBQztRQUVoQixVQUFLLEdBQUcsQ0FBQztRQUNULFVBQUssR0FBRyxDQUFDO1FBQ1QsY0FBUyxHQUFHLEtBQUs7SUFrRzdCO0lBOUZJLEtBQUs7UUFDRCx1REFBc0Q7UUFDdEQsSUFBSSxDQUFDLFdBQVcsR0FBRywrQkFBcUIsQ0FBQyxRQUFRO1FBQ2pELElBQUksQ0FBQyxXQUFXLENBQUMsaUJBQWlCLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxjQUFhO1lBQUMsQ0FBQztRQUNuRSxJQUFJLENBQUMsV0FBVyxDQUFDLFVBQVUsQ0FBQyxXQUFXLENBQUMsSUFBSSxDQUFDLFFBQU87WUFBQyxDQUFDO1FBQ3RELElBQUksQ0FBQyxXQUFXLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxHQUFHLEVBQUUsR0FBRSxJQUFJLENBQUMsV0FBVyxDQUFDLGVBQWUsQ0FBQyxpQ0FBUyxDQUFDLFNBQVMsQ0FBQyxHQUFDLENBQUM7SUFDdkc7SUFFQSxNQUFNO1FBQ0YseUNBQXdDO1FBQ3hDLElBQUcsSUFBSSxDQUFDLFNBQVMsRUFBRTtZQUNmLElBQUksQ0FBQyxRQUFRLEVBQUU7UUFDbkI7SUFDSjtJQUVBLHNEQUFxRDtJQUM3QyxRQUFRO1FBQ1osSUFBSSxDQUFDLEtBQUssSUFBSSxrQkFBSSxDQUFDLFNBQVM7UUFDNUIsSUFBRyxJQUFJLENBQUMsS0FBSyxJQUFJLENBQUMsRUFBRSxDQUFDO1lBQ2pCLElBQUksQ0FBQyxXQUFXLENBQUMsZUFBZSxDQUFDLGlDQUFTLENBQUMsU0FBUyxDQUFDO1FBQ3pEO1FBQ0EsSUFBSSxDQUFDLFlBQVksRUFBRTtJQUN2QjtJQUVBLDRFQUEyRTtJQUNuRSxjQUFjLENBQUMsUUFBbUI7UUFDdEMsUUFBTyxRQUFRLEVBQUU7WUFDYixLQUFLLGlDQUFTLENBQUMsU0FBUztnQkFDcEIsSUFBSSxDQUFDLFVBQVUsRUFBRTtnQkFDakIsTUFBSztZQUNULEtBQUssaUNBQVMsQ0FBQyxTQUFTO2dCQUNwQixJQUFJLENBQUMsVUFBVSxFQUFFO2dCQUNqQixNQUFLO1FBQ2I7SUFDSjtJQUVBLDhDQUE2QztJQUNyQyxVQUFVO1FBQ2QsSUFBSSxDQUFDLFFBQVEsQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQzlCLElBQUksQ0FBQyxRQUFRLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztRQUM5QixJQUFJLENBQUMsS0FBSyxHQUFHLENBQUM7UUFDZCxJQUFJLENBQUMsS0FBSyxHQUFHLElBQUksQ0FBQyxVQUFVO1FBQzVCLElBQUksQ0FBQyxZQUFZLEVBQUU7UUFDbkIsSUFBSSxDQUFDLFlBQVksRUFBRTtRQUNuQixJQUFJLENBQUMsU0FBUyxHQUFHLElBQUk7SUFDekI7SUFFQSxnQ0FBK0I7SUFDdkIsVUFBVTtRQUNkLElBQUksQ0FBQyxLQUFLLEdBQUcsQ0FBQztRQUNkLElBQUksQ0FBQyxZQUFZLEVBQUU7UUFDbkIsSUFBSSxDQUFDLFNBQVMsR0FBRyxLQUFLO1FBQ3RCLElBQUksQ0FBQyxjQUFjLENBQUMsSUFBSSxDQUFDLGVBQWUsRUFBRSxDQUFDO0lBQy9DO0lBRUEsOENBQTZDO0lBQ3JDLFFBQVE7UUFDWixJQUFJLENBQUMsS0FBSyxJQUFJLENBQUM7UUFDZixJQUFJLENBQUMsWUFBWSxFQUFFO1FBQ25CLElBQUksQ0FBQyxjQUFjLENBQUMsSUFBSSxDQUFDLGVBQWUsRUFBRTtJQUM5QztJQUVBLDRCQUEyQjtJQUNuQixZQUFZO1FBQ2hCLElBQUksT0FBTyxHQUFHLG1CQUFLLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUM7UUFDMUMsSUFBSSxZQUFZLEdBQUcsbUJBQUssQ0FBQyxVQUFVLENBQUMsQ0FBQyxJQUFJLENBQUMsS0FBSyxHQUFHLEdBQUcsQ0FBQyxHQUFHLEdBQUcsQ0FBQztRQUM3RCxJQUFJLElBQUksR0FBRyxPQUFPLENBQUMsUUFBUSxFQUFFLENBQUMsUUFBUSxDQUFDLENBQUMsRUFBRSxHQUFHLENBQUM7UUFDOUMsSUFBSSxJQUFJLEdBQUcsWUFBWSxDQUFDLFFBQVEsRUFBRSxDQUFDLFFBQVEsQ0FBQyxDQUFDLEVBQUUsR0FBRyxDQUFDO1FBQ25ELElBQUksQ0FBQyxTQUFTLENBQUMsSUFBSSxHQUFHLElBQUksR0FBRyxHQUFHLEdBQUUsSUFBSTtJQUMxQztJQUVBLDRCQUEyQjtJQUNuQixZQUFZO1FBQ2hCLElBQUksR0FBRyxHQUFHLElBQUksQ0FBQyxLQUFLLENBQUMsUUFBUSxFQUFFO1FBQy9CLEdBQUcsR0FBRyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsRUFBRSxHQUFHLENBQUM7UUFDMUIsSUFBSSxDQUFDLFNBQVMsQ0FBQyxJQUFJLEdBQUcsR0FBRztJQUM3QjtJQUVBLGlDQUFnQztJQUN4QixDQUFDLGVBQWU7UUFDcEIsSUFBSSxDQUFDLFFBQVEsQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO1FBQzdCLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxHQUFHLFdBQVc7UUFDbEMsTUFBTSxJQUFJLDRCQUFjLENBQUMsR0FBRyxDQUFDO1FBQzdCLElBQUksQ0FBQyxRQUFRLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztJQUNsQztJQUVBLGtDQUFpQztJQUN6QixDQUFDLGVBQWU7UUFDcEIsTUFBTSxJQUFJLDRCQUFjLENBQUMsR0FBRyxDQUFDO1FBQzdCLElBQUksQ0FBQyxRQUFRLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQztRQUM3QixJQUFJLENBQUMsVUFBVSxDQUFDLElBQUksR0FBRyxXQUFXO1FBQ2xDLE1BQU0sSUFBSSw0QkFBYyxDQUFDLEdBQUcsQ0FBQztRQUM3QixJQUFJLENBQUMsUUFBUSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7SUFDakM7Q0FDSjtBQWpIQSxtQ0FpSEEiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkNhbnZhc0NvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"4c5f76dfbea9f5c741fd540157155458","Specifier":"@assets/Experience/4
+    Basketball/Scripts/CanvasController","DefaultTypeName":"@assets/Experience/4
+    Basketball/Scripts/CanvasController.CanvasController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/4
+    Basketball/Scripts/CanvasController.CanvasController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"scoreText","Name":"scoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Score
+    Text"},{"Path":"timerText","Name":"timerText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Timer
+    Text"},{"Path":"topPanel","Name":"topPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Top
+    Panel"},{"Path":"bannerText","Name":"bannerText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Banner
+    Text"},{"Path":"midPanel","Name":"midPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Mid
+    Panel"},{"Path":"retryButton","Name":"retryButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Retry
+    Button"},{"Path":"timeAmount","Name":"timeAmount","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["10"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Time
+    Amount"}],"SupportedUiEvents":0,"DisplayName":"CanvasController","name":"CanvasController","hideFlags":8}'

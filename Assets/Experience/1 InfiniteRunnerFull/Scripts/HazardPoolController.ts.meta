@@ -1,0 +1,64 @@
+fileFormatVersion: 2
+guid: 8b321e2ce4f55416d947f127292c6066
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/GameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    GameManager_1 = require(\"@assets/Experience/1 InfiniteRunnerFull/Scripts/GameManager\");\nclass
+    HazardPoolController extends UnityEngine_1.MonoBehaviour {\n    constructor()
+    {\n        super(...arguments);\n        this.amountToPool = 25;\n        this.enemySpeed
+    = 20;\n        this.enemySpawnDelay = 1;\n        this.poolList = [];\n       
+    this.spawnPosition = new UnityEngine_1.Vector3(0, 0.5, 100);\n        this.canMove
+    = false;\n    }\n    Start() {\n        //Get GameManager singleton and add a
+    listener to OnGameStateChange event\n        this.gameManager = GameManager_1.default.Instance;\n       
+    this.gameManager.OnGameStateChange.addListener(this.CheckGameState, //@ts-ignore\n       
+    this);\n        //Spawn the pool of enemies\n        this.SpawnPool();\n    }\n   
+    Update() {\n        //Move enemies if playing\n        if (this.canMove) {\n           
+    this.MoveEnemies();\n        }\n    }\n    CheckGameState(newState) {\n       
+    switch (newState) {\n            case GameManager_1.GameState.GAME_PLAY:\n               
+    this.OnGamePlay();\n                break;\n            case GameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** This will
+    manage the enemies once the game starts. */\n    OnGamePlay() {\n        this.ResetEnemies();\n       
+    this.coroutine = this.StartCoroutine(this.SpawnEnemies());\n        this.canMove
+    = true;\n    }\n    /** Resets all the enemies back to deactivated. */\n    ResetEnemies()
+    {\n        this.poolList.forEach((enemy) => {\n            enemy.SetActive(false);\n       
+    });\n    }\n    /** Moves all activated enemies. It also deactivates the offscreen
+    ones. */\n    MoveEnemies() {\n        this.poolList.forEach((enemy) => {\n           
+    if (enemy.activeInHierarchy) {\n                if (enemy.transform.position.z
+    < -10) {\n                    enemy.SetActive(false);\n                }\n               
+    else {\n                    enemy.transform.position = new UnityEngine_1.Vector3(enemy.transform.position.x,
+    enemy.transform.position.y, enemy.transform.position.z - this.enemySpeed * UnityEngine_1.Time.deltaTime);\n               
+    }\n            }\n        });\n    }\n    /** Spawns the initial pool of GameObjects
+    and deactivates them. */\n    SpawnPool() {\n        for (let i = 0; i < this.amountToPool;
+    i++) {\n            let temp = UnityEngine_1.Object.Instantiate(this.prefab,
+    this.transform);\n            temp.SetActive(false);\n            this.poolList[i]
+    = temp;\n        }\n    }\n    /** Coroutine that spawns a new enemy from the
+    pool. */\n    *SpawnEnemies() {\n        while (true) {\n            yield null;\n           
+    //Get a deactivated enemy from the pool\n            let enemy = this.GetPooledObject();\n           
+    if (enemy) {\n                //Spawn in a random lane and activate\n               
+    let lane = UnityEngine_1.Mathf.Floor(// @ts-ignore\n                UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-1,
+    2));\n                enemy.transform.position = new UnityEngine_1.Vector3(lane,
+    this.spawnPosition.y, this.spawnPosition.z);\n                enemy.SetActive(true);\n           
+    }\n            yield new UnityEngine_1.WaitForSeconds(this.enemySpawnDelay);\n       
+    }\n    }\n    /** @returns a deactivated GameObject from the pool. */\n    GetPooledObject()
+    {\n        let result = null;\n        for (let i = 0; i < this.amountToPool;
+    i++) {\n            let temp = this.poolList[i];\n            if (!temp.activeInHierarchy)
+    {\n                result = temp;\n                break;\n            }\n       
+    }\n        return result;\n    }\n    /** This will manage the enemies once the
+    game ends. */\n    OnGameOver() {\n        if (this.coroutine) {\n           
+    this.StopCoroutine(this.coroutine);\n        }\n        this.canMove = false;\n   
+    }\n}\nexports.default = HazardPoolController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiSGF6YXJkUG9vbENvbnRyb2xsZXIuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSw2Q0FBd0g7QUFDeEgsNkZBQXNEO0FBRXRELE1BQXFCLG9CQUFxQixTQUFRLDJCQUFhO0lBQS9EOztRQUlZLGlCQUFZLEdBQVEsRUFBRSxDQUFDO1FBQ3ZCLGVBQVUsR0FBVSxFQUFFLENBQUM7UUFDdkIsb0JBQWUsR0FBVSxDQUFDLENBQUM7UUFFM0IsYUFBUSxHQUFpQixFQUFFO1FBQzNCLGtCQUFhLEdBQVksSUFBSSxxQkFBTyxDQUFDLENBQUMsRUFBRSxHQUFHLEVBQUUsR0FBRyxDQUFDO1FBSWpELFlBQU8sR0FBUyxLQUFLO0lBK0dqQztJQTFHSSxLQUFLO1FBQ0QseUVBQXdFO1FBQ3hFLElBQUksQ0FBQyxXQUFXLEdBQUcscUJBQVcsQ0FBQyxRQUFRO1FBQ3ZDLElBQUksQ0FBQyxXQUFXLENBQUMsaUJBQWlCLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxjQUFhO1lBQUMsQ0FBQztRQUNuRSwyQkFBMEI7UUFDMUIsSUFBSSxDQUFDLFNBQVMsRUFBRTtJQUNwQjtJQUVBLE1BQU07UUFDRix5QkFBd0I7UUFDeEIsSUFBRyxJQUFJLENBQUMsT0FBTyxFQUFFO1lBQ2IsSUFBSSxDQUFDLFdBQVcsRUFBRTtRQUN0QjtJQUNKO0lBRVEsY0FBYyxDQUFDLFFBQW1CO1FBQ3RDLFFBQU8sUUFBUSxFQUFFO1lBQ2IsS0FBSyx1QkFBUyxDQUFDLFNBQVM7Z0JBQ3BCLElBQUksQ0FBQyxVQUFVLEVBQUU7Z0JBQ2pCLE1BQUs7WUFDVCxLQUFLLHVCQUFTLENBQUMsU0FBUztnQkFDcEIsSUFBSSxDQUFDLFVBQVUsRUFBRTtnQkFDakIsTUFBSztRQUNiO0lBQ0o7SUFFQSx5REFBd0Q7SUFDaEQsVUFBVTtRQUNkLElBQUksQ0FBQyxZQUFZLEVBQUU7UUFDbkIsSUFBSSxDQUFDLFNBQVMsR0FBRyxJQUFJLENBQUMsY0FBYyxDQUFDLElBQUksQ0FBQyxZQUFZLEVBQUUsQ0FBQztRQUN6RCxJQUFJLENBQUMsT0FBTyxHQUFHLElBQUk7SUFDdkI7SUFFQSxrREFBaUQ7SUFDekMsWUFBWTtRQUNoQixJQUFJLENBQUMsUUFBUSxDQUFDLE9BQU8sQ0FBRSxDQUFDLEtBQUssRUFBRSxFQUFFO1lBQzdCLEtBQUssQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQzFCLENBQUMsQ0FBQztJQUNOO0lBRUEsMkVBQTBFO0lBQ2xFLFdBQVc7UUFDZixJQUFJLENBQUMsUUFBUSxDQUFDLE9BQU8sQ0FBRSxDQUFDLEtBQUssRUFBRSxFQUFFO1lBQzdCLElBQUcsS0FBSyxDQUFDLGlCQUFpQixFQUFFO2dCQUN4QixJQUFJLEtBQUssQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLENBQUMsR0FBRyxDQUFDLEVBQUUsRUFBRTtvQkFDbEMsS0FBSyxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7Z0JBQzFCLENBQUM7cUJBQUk7b0JBQ0QsS0FBSyxDQUFDLFNBQVMsQ0FBQyxRQUFRLEdBQUcsSUFBSSxxQkFBTyxDQUNsQyxLQUFLLENBQUMsU0FBUyxDQUFDLFFBQVEsQ0FBQyxDQUFDLEVBQzFCLEtBQUssQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLENBQUMsRUFDMUIsS0FBSyxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxHQUFHLElBQUksQ0FBQyxVQUFVLEdBQUcsa0JBQUksQ0FBQyxTQUFTLENBQUM7Z0JBQ3RFO1lBQ0o7UUFDSixDQUFDLENBQUMsQ0FBQztJQUNQO0lBRUEsbUVBQWtFO0lBQzFELFNBQVM7UUFDYixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFlBQVksRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN2QyxJQUFJLElBQUksR0FBRyxvQkFBTSxDQUFDLFdBQVcsQ0FBQyxJQUFJLENBQUMsTUFBTSxFQUFFLElBQUksQ0FBQyxTQUFTLENBQWU7WUFDeEUsSUFBSSxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7WUFDckIsSUFBSSxDQUFDLFFBQVEsQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJO1FBQzNCO0lBQ0o7SUFFQSx1REFBc0Q7SUFDOUMsQ0FBQyxZQUFZO1FBQ2pCLE9BQU0sSUFBSSxFQUFFO1lBQ1IsTUFBTSxJQUFJO1lBQ1YsdUNBQXNDO1lBQ3RDLElBQUksS0FBSyxHQUFHLElBQUksQ0FBQyxlQUFlLEVBQUU7WUFDbEMsSUFBSSxLQUFLLEVBQUU7Z0JBQ1AscUNBQW9DO2dCQUNwQyxJQUFJLElBQUksR0FBRyxtQkFBSyxDQUFDLEtBQUs7Z0JBQUMsb0JBQU0sQ0FBQyx3QkFBSyxDQUFDLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDO2dCQUMzQyxLQUFLLENBQUMsU0FBUyxDQUFDLFFBQVEsR0FBRyxJQUFJLHFCQUFPLENBQ2xDLElBQUksRUFDSixJQUFJLENBQUMsYUFBYSxDQUFDLENBQUMsRUFDcEIsSUFBSSxDQUFDLGFBQWEsQ0FBQyxDQUFDLENBQUM7Z0JBQ3pCLEtBQUssQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO1lBQ3pCO1lBQ0EsTUFBTSxJQUFJLDRCQUFjLENBQUMsSUFBSSxDQUFDLGVBQWUsQ0FBQztRQUNsRDtJQUNKO0lBRUEsdURBQXNEO0lBQzlDLGVBQWU7UUFDbkIsSUFBSSxNQUFNLEdBQUcsSUFBSTtRQUVqQixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLFlBQVksRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUN2QyxJQUFJLElBQUksR0FBRyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQztZQUMzQixJQUFHLENBQUMsSUFBSSxDQUFDLGlCQUFpQixFQUFFO2dCQUN4QixNQUFNLEdBQUcsSUFBSTtnQkFDYixNQUFLO1lBQ1Q7UUFDSjtRQUVBLE9BQU8sTUFBTTtJQUNqQjtJQUVBLHVEQUFzRDtJQUM5QyxVQUFVO1FBQ2QsSUFBRyxJQUFJLENBQUMsU0FBUyxFQUFFO1lBQ2YsSUFBSSxDQUFDLGFBQWEsQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDO1FBQ3RDO1FBQ0EsSUFBSSxDQUFDLE9BQU8sR0FBRyxLQUFLO0lBQ3hCO0NBQ0o7QUE1SEEsdUNBNEhBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJIYXphcmRQb29sQ29udHJvbGxlci50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"f1bf196a6ed756965e2df843400bf41f","Specifier":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/HazardPoolController","DefaultTypeName":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/HazardPoolController.HazardPoolController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/HazardPoolController.HazardPoolController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"prefab","Name":"prefab","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Enemy
+    Settings\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Prefab"},{"Path":"amountToPool","Name":"amountToPool","TypeName":"System.Int32","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["25"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Amount
+    To Pool"},{"Path":"enemySpeed","Name":"enemySpeed","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["20"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Enemy
+    Speed"},{"Path":"enemySpawnDelay","Name":"enemySpawnDelay","TypeName":"System.Single","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["1"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Enemy
+    Spawn Delay"}],"SupportedUiEvents":0,"DisplayName":"HazardPoolController","name":"HazardPoolController","hideFlags":8}'

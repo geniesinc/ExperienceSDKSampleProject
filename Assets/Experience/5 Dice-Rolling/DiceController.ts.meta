@@ -1,0 +1,89 @@
+fileFormatVersion: 2
+guid: 3f29250ccf59a4847b7ec9dba62a1ba0
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    UnityEngine_1 = require(\"UnityEngine\");\nclass DiceController extends UnityEngine_1.MonoBehaviour
+    {\n    constructor() {\n        super(...arguments);\n        this.rollStrength
+    = 20;\n        this.spinStrength = 10;\n        this.margin = 0.005;\n       
+    this.defaultBannerText = \"Tap to Roll\";\n    }\n    Start() {\n        //Show
+    debug panel if option is active\n        if (this.showDebug) {\n            this.debugPanel.SetActive(true);\n           
+    this.StartCoroutine(this.UpdateDebugText());\n        }\n        else {\n           
+    this.debugPanel.SetActive(false);\n        }\n    }\n    Update() {\n       
+    //If user touches screen and dice are not rolling, roll dice\n        if (UnityEngine_1.Input.touchCount
+    > 0 && !this.AreDiceRolling()) {\n            this.RollDie(this.die1);\n           
+    this.RollDie(this.die2);\n            this.bannerText.text = \"\";\n        }\n       
+    //If dice are not rolling and result is not shown yet\n        if (this.bannerText.text
+    == \"\" && !this.AreDiceRolling()) {\n            //If roll is not clean for
+    both dice, display bad roll\n            if (this.TopDieNumber(this.die1) ==
+    0 || this.TopDieNumber(this.die2) == 0) {\n                this.bannerText.text
+    = \"Bad Roll\";\n                //else display the sum of the two dice\n           
+    }\n            else {\n                let sum = this.TopDieNumber(this.die1)
+    + this.TopDieNumber(this.die2);\n                this.bannerText.text = sum.toString();\n           
+    }\n        }\n    }\n    /** Check if a die is planted on the ground within a
+    certain degree of margin */\n    IsDiePlanted(die) {\n        let eulers = die.gameObject.transform.eulerAngles;\n       
+    let count = 0;\n        if (eulers.x % 90 < this.margin || eulers.x % 90 > 90
+    - this.margin) {\n            count += 1;\n        }\n        if (eulers.y %
+    90 < this.margin || eulers.y % 90 > 90 - this.margin) {\n            count +=
+    1;\n        }\n        if (eulers.z % 90 < this.margin || eulers.z % 90 > 90
+    - this.margin) {\n            count += 1;\n        }\n        return count >=
+    2;\n    }\n    /** Deduce what side of a die is facing up and @returns the value
+    of that side */\n    TopDieNumber(die) {\n        let eulers = die.gameObject.transform.eulerAngles;\n       
+    let value = 0;\n        if (this.equalWithinMargin(eulers.x, 90)) {\n           
+    value = 6;\n        }\n        else if (this.equalWithinMargin(eulers.x, -90)
+    || this.equalWithinMargin(eulers.x, 270)) {\n            value = 1;\n       
+    }\n        else if ((this.equalWithinMargin(eulers.x, 0) && this.equalWithinMargin(eulers.z,
+    0)) ||\n            (this.equalWithinMargin(eulers.x, 180) && this.equalWithinMargin(eulers.z,
+    180))) {\n            value = 3;\n        }\n        else if ((this.equalWithinMargin(eulers.x,
+    180) && this.equalWithinMargin(eulers.z, -90)) ||\n            (this.equalWithinMargin(eulers.x,
+    180) && this.equalWithinMargin(eulers.z, 270)) ||\n            (this.equalWithinMargin(eulers.x,
+    0) && this.equalWithinMargin(eulers.z, 90))) {\n            value = 5;\n       
+    }\n        else if ((this.equalWithinMargin(eulers.x, 0) && this.equalWithinMargin(eulers.z,
+    -90)) ||\n            (this.equalWithinMargin(eulers.x, 0) && this.equalWithinMargin(eulers.z,
+    270)) ||\n            (this.equalWithinMargin(eulers.x, 180) && this.equalWithinMargin(eulers.z,
+    90))) {\n            value = 2;\n        }\n        else if ((this.equalWithinMargin(eulers.x,
+    0) && this.equalWithinMargin(eulers.z, 180)) ||\n            (this.equalWithinMargin(eulers.x,
+    180) && this.equalWithinMargin(eulers.z, 0))) {\n            value = 4;\n       
+    }\n        return value;\n    }\n    /** Helper function to see if a number is
+    within another number''s margin */\n    equalWithinMargin(num1, num2) {\n       
+    return num1 < num2 + this.margin && num1 > num2 - this.margin;\n    }\n    /**
+    Check if the dice are rolling using their velocity */\n    AreDiceRolling() {\n       
+    return this.die1.velocity.magnitude > 0 ||\n            this.die2.velocity.magnitude
+    > 0;\n    }\n    /** Roll a die with random velocity */\n    RollDie(die) {\n       
+    die.velocity = new UnityEngine_1.Vector3(\n        // @ts-ignore\n        UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-this.rollStrength,
+    this.rollStrength), this.rollStrength, \n        // @ts-ignore\n        UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-this.rollStrength,
+    this.rollStrength));\n        die.angularVelocity = new UnityEngine_1.Vector3(\n       
+    // @ts-ignore\n        UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-this.spinStrength,
+    this.spinStrength), \n        // @ts-ignore\n        UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-this.spinStrength,
+    this.spinStrength), \n        // @ts-ignore\n        UnityEngine_1.Random.Range_EBB7509C_H2CFB2EE5(-this.spinStrength,
+    this.spinStrength));\n    }\n    /** A debug panel to see the dice information
+    as they roll and land */\n    *UpdateDebugText() {\n        while (true) {\n           
+    let str = \"Debug Text\\n=======\\n\";\n            str += \"Dice 1 Vel Mag:
+    \" + UnityEngine_1.Mathf.Floor(this.die1.velocity.magnitude).toString() + \"\\n\";\n           
+    str += \"Dice 2 Vel Mag: \" + UnityEngine_1.Mathf.Floor(this.die2.velocity.magnitude).toString()
+    + \"\\n\";\n            str += \"Dice Rolling: \" + this.AreDiceRolling() + \"\\n\";\n           
+    str += \"Dice 1 Planted: \" + this.IsDiePlanted(this.die1) + \"\\n\";\n           
+    str += \"Dice 2 Planted: \" + this.IsDiePlanted(this.die2) + \"\\n\";\n           
+    str += \"Dice 1 Value: \" + this.TopDieNumber(this.die1) + \"\\n\";\n           
+    str += \"Dice 2 Value: \" + this.TopDieNumber(this.die2) + \"\\n\";\n           
+    this.debugText.text = str;\n            yield new UnityEngine_1.WaitForSeconds(0);\n       
+    }\n    }\n}\nexports.default = DiceController;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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QUFHLElBQUksa0JBQWtCLEdBQUcsbUJBQUssQ0FBQyxLQUFLLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsU0FBUyxDQUFDLENBQUMsUUFBUSxFQUFFLEdBQUcsSUFBSTtZQUN2RixHQUFHLElBQUksZ0JBQWdCLEdBQUcsSUFBSSxDQUFDLGNBQWMsRUFBRSxHQUFHLElBQUk7WUFDdEQsR0FBRyxJQUFJLGtCQUFrQixHQUFHLElBQUksQ0FBQyxZQUFZLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxHQUFHLElBQUk7WUFDL0QsR0FBRyxJQUFJLGtCQUFrQixHQUFHLElBQUksQ0FBQyxZQUFZLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxHQUFHLElBQUk7WUFDL0QsR0FBRyxJQUFJLGdCQUFnQixHQUFHLElBQUksQ0FBQyxZQUFZLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxHQUFHLElBQUk7WUFDN0QsR0FBRyxJQUFJLGdCQUFnQixHQUFHLElBQUksQ0FBQyxZQUFZLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxHQUFHLElBQUk7WUFDN0QsSUFBSSxDQUFDLFNBQVMsQ0FBQyxJQUFJLEdBQUcsR0FBRztZQUN6QixNQUFNLElBQUksNEJBQWMsQ0FBQyxDQUFDLENBQUM7UUFDL0I7SUFDSjtDQUNKO0FBNUlBLGlDQTRJQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiRGljZUNvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"4ff471dd600bf4496b25c5cab666840d","Specifier":"@assets/Experience/5
+    Dice-Rolling/DiceController","DefaultTypeName":"@assets/Experience/5 Dice-Rolling/DiceController.DiceController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/5
+    Dice-Rolling/DiceController.DiceController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"die1","Name":"die1","TypeName":"UnityEngine.Rigidbody","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Dice
+    Properties\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Die
+    1"},{"Path":"die2","Name":"die2","TypeName":"UnityEngine.Rigidbody","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Die
+    2"},{"Path":"rollStrength","Name":"rollStrength","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["20"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Roll
+    Strength"},{"Path":"spinStrength","Name":"spinStrength","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["10"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Spin
+    Strength"},{"Path":"margin","Name":"margin","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":["0.005"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Margin"},{"Path":"showDebug","Name":"showDebug","TypeName":"System.Boolean","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Debug
+    Properties\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Show
+    Debug"},{"Path":"debugPanel","Name":"debugPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Debug
+    Panel"},{"Path":"debugText","Name":"debugText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Debug
+    Text"},{"Path":"bannerText","Name":"bannerText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Space","Args":[]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Banner
+    Text"}],"SupportedUiEvents":0,"DisplayName":"DiceController","name":"DiceController","hideFlags":8}'

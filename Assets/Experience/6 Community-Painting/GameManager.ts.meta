@@ -1,0 +1,87 @@
+fileFormatVersion: 2
+guid: d9b271c1b6a141f4eacaaf58758f9e19
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    Genies_Experience_CloudSave_1 = require(\"Genies.Experience.CloudSave\");\nconst
+    Genies_Experience_Sdk_1 = require(\"Genies.Experience.Sdk\");\nconst UnityEngine_1
+    = require(\"UnityEngine\");\nconst UnityEngine_UI_1 = require(\"UnityEngine.UI\");\nclass
+    GameManager extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.gridSize = 16;\n        this.secondsBetweenUpdate
+    = 1;\n        this.pixels = [];\n        this.GRID_STORAGE_KEY = \"GridStorageKey\";\n       
+    this.GRID_DATA_KEY = \"GridDataKey\";\n    }\n    async Start() {\n        await
+    $promise(Genies_Experience_Sdk_1.GeniesExperienceSdk.InitializeAsync());\n       
+    this.storage = new Genies_Experience_CloudSave_1.CloudSaveStorage(this.GRID_STORAGE_KEY,
+    true);\n        this.GenerateGrid();\n        this.ConnectButtons();\n       
+    this.StartCoroutine(this.UpdateGrid());\n    }\n    /** Coroutine to update the
+    grid after X seconds */\n    *UpdateGrid() {\n        while (true) {\n           
+    this.LoadGridData();\n            yield new UnityEngine_1.WaitForSeconds(this.secondsBetweenUpdate);\n       
+    }\n    }\n    /** Generate the grid of pixels given a specific size */\n    GenerateGrid()
+    {\n        let panelSize = this.gridPanel.GetComponent($typeof(UnityEngine_1.RectTransform)).rect.width;\n       
+    let pixelSize = panelSize / this.gridSize;\n        let pixelVector = new UnityEngine_1.Vector2(pixelSize,
+    pixelSize);\n        this.gridPanel.GetComponent($typeof(UnityEngine_UI_1.GridLayoutGroup)).cellSize
+    = pixelVector;\n        let index = 0;\n        for (let i = 0; i < this.gridSize;
+    i++) {\n            for (let j = 0; j < this.gridSize; j++) {\n               
+    let pixel = UnityEngine_1.GameObject.Instantiate(this.pixelPrefab, this.gridPanel.transform);\n               
+    let rt = pixel.GetComponent($typeof(UnityEngine_1.RectTransform));\n               
+    rt.localPosition = new UnityEngine_1.Vector3(i * pixelSize, j * pixelSize, 0);\n               
+    rt.sizeDelta = pixelVector;\n                this.pixels[index++] = pixel;\n           
+    }\n        }\n    }\n    /** Connect the buttons for the pixel grid and color
+    selection to listener methods */\n    ConnectButtons() {\n        for (let selectColorButton
+    of this.selectColorButtons) {\n            let color = selectColorButton.gameObject.GetComponent($typeof(UnityEngine_UI_1.Image)).color;\n           
+    selectColorButton.onClick.AddListener(() => {\n                this.ChangeCurrentColor(color);\n           
+    });\n        }\n        for (let pixel of this.pixels) {\n            pixel.GetComponent($typeof(UnityEngine_UI_1.Button)).onClick.AddListener(()
+    => {\n                this.ChangePixelColor(pixel);\n            });\n       
+    }\n    }\n    /** Listener method to change the current selected color */\n   
+    ChangeCurrentColor(color) {\n        this.currentColorImage.color = color;\n   
+    }\n    /** Listener method to change a specific color */\n    ChangePixelColor(pixel)
+    {\n        pixel.GetComponent($typeof(UnityEngine_UI_1.Image)).color = this.currentColorImage.color;\n       
+    this.SaveGridData();\n    }\n    /** Load the grid data from Cloud Storage and
+    color the grid with the data */\n    async LoadGridData() {\n        await $promise(this.storage.Load());\n       
+    let gridData;\n        if (this.storage.Has(this.GRID_DATA_KEY)) {\n           
+    gridData = this.storage.GetString(this.GRID_DATA_KEY);\n            console.log(\"Grid
+    Data: \" + gridData);\n        }\n        else {\n            console.log(\"No
+    grid data yet\");\n            gridData = this.InitializeGridData();\n           
+    this.storage.SetString(this.GRID_DATA_KEY, gridData);\n            await $promise(this.storage.Save());\n       
+    }\n        this.ColorGridWithData(gridData);\n    }\n    /** Create a initial
+    grid data using a stringified Json object */\n    InitializeGridData() {\n       
+    let data = [];\n        for (let i = 0; i < this.pixels.length; i++) {\n           
+    let pixel = this.pixels[i];\n            let color = pixel.GetComponent($typeof(UnityEngine_UI_1.Image)).color;\n           
+    data.push({\n                index: i,\n                r: color.r,\n               
+    g: color.g,\n                b: color.b,\n            });\n        }\n       
+    const jsonObject = {\n            data: data\n        };\n        const jsonString
+    = JSON.stringify(jsonObject);\n        console.log(\"Initial Data:\" + jsonString);\n       
+    return jsonString;\n    }\n    /** Color the grid given a stringified Json object
+    */\n    ColorGridWithData(data) {\n        const jsonObject = JSON.parse(data);\n       
+    if (jsonObject.data && jsonObject.data.length == this.pixels.length) {\n           
+    for (let obj of jsonObject.data) {\n                let pixel = this.pixels[obj.index];\n               
+    let color = new UnityEngine_1.Color(obj.r, obj.g, obj.b);\n                pixel.GetComponent($typeof(UnityEngine_UI_1.Image)).color
+    = color;\n            }\n        }\n    }\n    /** Save the current grid to the
+    stored data */\n    async SaveGridData() {\n        await $promise(this.storage.Load());\n       
+    let gridData;\n        if (this.storage.Has(this.GRID_DATA_KEY)) {\n           
+    gridData = this.storage.GetString(this.GRID_DATA_KEY);\n            const jsonObject
+    = JSON.parse(gridData);\n            if (jsonObject.data && jsonObject.data.length
+    == this.pixels.length) {\n                for (let obj of jsonObject.data) {\n                   
+    let pixel = this.pixels[obj.index];\n                    let color = pixel.GetComponent($typeof(UnityEngine_UI_1.Image)).color;\n                   
+    obj.r = color.r;\n                    obj.g = color.g;\n                    obj.b
+    = color.b;\n                }\n            }\n            const jsonString =
+    JSON.stringify(jsonObject);\n            console.log(\"Saving Data:\" + jsonString);\n           
+    this.storage.SetString(this.GRID_DATA_KEY, jsonString);\n            await $promise(this.storage.Save());\n       
+    }\n    }\n}\nexports.default = GameManager;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiR2FtZU1hbmFnZXIuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSw2RUFBOEQ7QUFDOUQsaUVBQTJEO0FBQzNELDZDQUErRztBQUMvRyxtREFBK0Q7QUFVL0QsTUFBcUIsV0FBWSxTQUFRLDJCQUFhO0lBQXREOztRQVdXLGFBQVEsR0FBVyxFQUFFO1FBQ3JCLHlCQUFvQixHQUFXLENBQUM7UUFFL0IsV0FBTSxHQUFpQixFQUFFO1FBQ3pCLHFCQUFnQixHQUFHLGdCQUFnQjtRQUNuQyxrQkFBYSxHQUFHLGFBQWE7SUFxSnpDO0lBbEpJLEtBQUssQ0FBQyxLQUFLO1FBQ1AsTUFBSyxTQUFDLDJDQUFtQixDQUFDLGVBQWUsRUFBQyxDQUFDO1FBQzNDLElBQUksQ0FBQyxPQUFPLEdBQUcsSUFBSSw4Q0FBZ0IsQ0FBQyxJQUFJLENBQUMsZ0JBQWdCLEVBQUUsSUFBSSxDQUFDO1FBQ2hFLElBQUksQ0FBQyxZQUFZLEVBQUU7UUFDbkIsSUFBSSxDQUFDLGNBQWMsRUFBRTtRQUNyQixJQUFJLENBQUMsY0FBYyxDQUFDLElBQUksQ0FBQyxVQUFVLEVBQUUsQ0FBQztJQUMxQztJQUVBLG1EQUFrRDtJQUMxQyxDQUFDLFVBQVU7UUFDZixPQUFNLElBQUksRUFBRTtZQUNSLElBQUksQ0FBQyxZQUFZLEVBQUU7WUFDbkIsTUFBTSxJQUFJLDRCQUFjLENBQUMsSUFBSSxDQUFDLG9CQUFvQixDQUFDO1FBQ3ZEO0lBQ0o7SUFFQSx3REFBdUQ7SUFDL0MsWUFBWTtRQUVoQixJQUFJLFNBQVMsR0FBRyxJQUFJLENBQUMsU0FBUyxDQUFDLFlBQVcsU0FBRSwyQkFBWSxFQUFJLENBQUMsSUFBSSxDQUFDLEtBQUs7UUFDdkUsSUFBSSxTQUFTLEdBQUcsU0FBUyxHQUFHLElBQUksQ0FBQyxRQUFRO1FBQ3pDLElBQUksV0FBVyxHQUFHLElBQUkscUJBQU8sQ0FBQyxTQUFTLEVBQUUsU0FBUyxDQUFDO1FBQ25ELElBQUksQ0FBQyxTQUFTLENBQUMsWUFBVyxTQUFFLGdDQUFjLEVBQUksQ0FBQyxRQUFRLEdBQUcsV0FBVztRQUVyRSxJQUFJLEtBQUssR0FBRyxDQUFDO1FBRWIsS0FBSSxJQUFJLENBQUMsR0FBRyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQyxRQUFRLEVBQUUsQ0FBQyxFQUFFLEVBQUU7WUFDbkMsS0FBSSxJQUFJLENBQUMsR0FBRyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQyxRQUFRLEVBQUUsQ0FBQyxFQUFFLEVBQUU7Z0JBQ25DLElBQUksS0FBSyxHQUFHLHdCQUFVLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxXQUFXLEVBQUUsSUFBSSxDQUFDLFNBQVMsQ0FBQyxTQUFTLENBQWU7Z0JBQzVGLElBQUksRUFBRSxHQUFHLEtBQUssQ0FBQyxZQUFXLFNBQUUsMkJBQVksRUFBSTtnQkFDNUMsRUFBRSxDQUFDLGFBQWEsR0FBRSxJQUFJLHFCQUFPLENBQUMsQ0FBQyxHQUFHLFNBQVMsRUFBRSxDQUFDLEdBQUcsU0FBUyxFQUFFLENBQUMsQ0FBQztnQkFDOUQsRUFBRSxDQUFDLFNBQVMsR0FBRyxXQUFXO2dCQUMxQixJQUFJLENBQUMsTUFBTSxDQUFDLEtBQUssRUFBRSxDQUFDLEdBQUcsS0FBSztZQUNoQztRQUNKO0lBQ0o7SUFFQSxxRkFBb0Y7SUFDNUUsY0FBYztRQUNsQixLQUFJLElBQUksaUJBQWlCLElBQUksSUFBSSxDQUFDLGtCQUFrQixFQUFDO1lBQ2pELElBQUksS0FBSyxHQUFHLGlCQUFpQixDQUFDLFVBQVUsQ0FBQyxZQUFXLFNBQUUsc0JBQUksRUFBSSxDQUFDLEtBQUs7WUFDcEUsaUJBQWlCLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxHQUFFLEVBQUU7Z0JBQ3RDLElBQUksQ0FBQyxrQkFBa0IsQ0FBQyxLQUFLLENBQUM7WUFDbEMsQ0FBQyxDQUFDO1FBQ047UUFDQSxLQUFLLElBQUksS0FBSyxJQUFJLElBQUksQ0FBQyxNQUFNLEVBQUU7WUFDM0IsS0FBSyxDQUFDLFlBQVcsU0FBRSx1QkFBSyxFQUFJLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxHQUFHLEVBQUU7Z0JBQ2xELElBQUksQ0FBQyxnQkFBZ0IsQ0FBQyxLQUFLLENBQUM7WUFDaEMsQ0FBQyxDQUFDO1FBQ047SUFDSjtJQUVBLDJEQUEwRDtJQUNsRCxrQkFBa0IsQ0FBQyxLQUFZO1FBQ25DLElBQUksQ0FBQyxpQkFBaUIsQ0FBQyxLQUFLLEdBQUcsS0FBSztJQUN4QztJQUVBLGlEQUFnRDtJQUN4QyxnQkFBZ0IsQ0FBQyxLQUFnQjtRQUNyQyxLQUFLLENBQUMsWUFBVyxTQUFFLHNCQUFJLEVBQUksQ0FBQyxLQUFLLEdBQUcsSUFBSSxDQUFDLGlCQUFpQixDQUFDLEtBQUs7UUFDaEUsSUFBSSxDQUFDLFlBQVksRUFBRTtJQUN2QjtJQUVBLDZFQUE0RTtJQUNwRSxLQUFLLENBQUMsWUFBWTtRQUN0QixNQUFLLFNBQUMsSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLEVBQUMsQ0FBQztRQUV6QixJQUFJLFFBQWdCO1FBRXBCLElBQUksSUFBSSxDQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxFQUFFO1lBQ3RDLFFBQVEsR0FBRyxJQUFJLENBQUMsT0FBTyxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDO1lBQ3JELE9BQU8sQ0FBQyxHQUFHLENBQUMsYUFBYSxHQUFHLFFBQVEsQ0FBQztRQUV6QyxDQUFDO2FBQU07WUFDSCxPQUFPLENBQUMsR0FBRyxDQUFDLGtCQUFrQixDQUFDO1lBQy9CLFFBQVEsR0FBRyxJQUFJLENBQUMsa0JBQWtCLEVBQUUsQ0FBQztZQUNyQyxJQUFJLENBQUMsT0FBTyxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUMsYUFBYSxFQUFFLFFBQVEsQ0FBQztZQUNwRCxNQUFLLFNBQUMsSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLEVBQUMsQ0FBQztRQUM3QjtRQUVBLElBQUksQ0FBQyxpQkFBaUIsQ0FBQyxRQUFRLENBQUM7SUFDcEM7SUFFQSxpRUFBZ0U7SUFDeEQsa0JBQWtCO1FBRXRCLElBQUksSUFBSSxHQUFHLEVBQUU7UUFFYixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUUsQ0FBQyxFQUFFLEVBQUU7WUFDeEMsSUFBSSxLQUFLLEdBQWUsSUFBSSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUM7WUFDdEMsSUFBSSxLQUFLLEdBQVUsS0FBSyxDQUFDLFlBQVcsU0FBRSxzQkFBSSxFQUFJLENBQUMsS0FBSztZQUNwRCxJQUFJLENBQUMsSUFBSSxDQUFDO2dCQUNOLEtBQUssRUFBRSxDQUFDO2dCQUNSLENBQUMsRUFBRSxLQUFLLENBQUMsQ0FBQztnQkFDVixDQUFDLEVBQUUsS0FBSyxDQUFDLENBQUM7Z0JBQ1YsQ0FBQyxFQUFFLEtBQUssQ0FBQyxDQUFDO2FBQ2IsQ0FBQztRQUNOO1FBRUEsTUFBTSxVQUFVLEdBQUc7WUFDZixJQUFJLEVBQUUsSUFBRztTQUNiO1FBRUEsTUFBTSxVQUFVLEdBQUcsSUFBSSxDQUFDLFNBQVMsQ0FBQyxVQUFVO1FBRTVDLE9BQU8sQ0FBQyxHQUFHLENBQUMsZUFBZSxHQUFHLFVBQVUsQ0FBQztRQUV6QyxPQUFPLFVBQVU7SUFDckI7SUFFQSxxREFBb0Q7SUFDNUMsaUJBQWlCLENBQUMsSUFBWTtRQUNsQyxNQUFNLFVBQVUsR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDLElBQUksQ0FBQztRQUNuQyxJQUFJLFVBQVUsQ0FBQyxJQUFJLElBQUksVUFBVSxDQUFDLElBQUksQ0FBQyxNQUFNLElBQUksSUFBSSxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUU7WUFDakUsS0FBSSxJQUFJLEdBQUcsSUFBSSxVQUFVLENBQUMsSUFBSSxFQUFFO2dCQUM1QixJQUFJLEtBQUssR0FBRyxJQUFJLENBQUMsTUFBTSxDQUFDLEdBQUcsQ0FBQyxLQUFLLENBQUM7Z0JBQ2xDLElBQUksS0FBSyxHQUFHLElBQUksbUJBQUssQ0FBQyxHQUFHLENBQUMsQ0FBQyxFQUFFLEdBQUcsQ0FBQyxDQUFDLEVBQUUsR0FBRyxDQUFDLENBQUMsQ0FBQztnQkFDMUMsS0FBSyxDQUFDLFlBQVcsU0FBRSxzQkFBSSxFQUFJLENBQUMsS0FBSyxHQUFHLEtBQUs7WUFDN0M7UUFDSjtJQUNKO0lBRUEsK0NBQThDO0lBQ3RDLEtBQUssQ0FBQyxZQUFZO1FBQ3ZCLE1BQUssU0FBQyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksRUFBQyxDQUFDO1FBRXhCLElBQUksUUFBZ0I7UUFFcEIsSUFBSSxJQUFJLENBQUMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLEVBQUU7WUFDdEMsUUFBUSxHQUFHLElBQUksQ0FBQyxPQUFPLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUM7WUFDckQsTUFBTSxVQUFVLEdBQUcsSUFBSSxDQUFDLEtBQUssQ0FBQyxRQUFRLENBQUM7WUFDdkMsSUFBSSxVQUFVLENBQUMsSUFBSSxJQUFJLFVBQVUsQ0FBQyxJQUFJLENBQUMsTUFBTSxJQUFJLElBQUksQ0FBQyxNQUFNLENBQUMsTUFBTSxFQUFFO2dCQUNqRSxLQUFJLElBQUksR0FBRyxJQUFJLFVBQVUsQ0FBQyxJQUFJLEVBQUU7b0JBQzVCLElBQUksS0FBSyxHQUFHLElBQUksQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLEtBQUssQ0FBQztvQkFDbEMsSUFBSSxLQUFLLEdBQUcsS0FBSyxDQUFDLFlBQVcsU0FBRSxzQkFBSSxFQUFJLENBQUMsS0FBSztvQkFDN0MsR0FBRyxDQUFDLENBQUMsR0FBRyxLQUFLLENBQUMsQ0FBQztvQkFDZixHQUFHLENBQUMsQ0FBQyxHQUFHLEtBQUssQ0FBQyxDQUFDO29CQUNmLEdBQUcsQ0FBQyxDQUFDLEdBQUcsS0FBSyxDQUFDLENBQUM7Z0JBQ25CO1lBQ0o7WUFDQSxNQUFNLFVBQVUsR0FBRyxJQUFJLENBQUMsU0FBUyxDQUFDLFVBQVUsQ0FBQztZQUM3QyxPQUFPLENBQUMsR0FBRyxDQUFDLGNBQWMsR0FBRyxVQUFVLENBQUM7WUFDeEMsSUFBSSxDQUFDLE9BQU8sQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDLGFBQWEsRUFBRSxVQUFVLENBQUM7WUFDdEQsTUFBSyxTQUFDLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxFQUFDLENBQUM7UUFDN0I7SUFDSjtDQUNKO0FBcktBLDhCQXFLQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiR2FtZU1hbmFnZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"e47f98449df6a0783c3156e4f546de91","Specifier":"@assets/Experience/6
+    Community-Painting/GameManager","DefaultTypeName":"@assets/Experience/6 Community-Painting/GameManager.GameManager","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/6
+    Community-Painting/GameManager.GameManager","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"gridPanel","Name":"gridPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"UI
+    Elements\""]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Grid
+    Panel"},{"Path":"pixelPrefab","Name":"pixelPrefab","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Pixel
+    Prefab"},{"Path":"selectColorButtons","Name":"selectColorButtons","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":1,"IsArray":true,"IsEnum":false,"ArrayElementInitializer":{"Path":"selectColorButtons_D1","Name":"selectColorButtons","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Select
+    Color Buttons"},"ChildProperties":[],"PrettyName":"Select Color Buttons"},{"Path":"currentColorImage","Name":"currentColorImage","TypeName":"UnityEngine.UI.Image","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Current
+    Color Image"},{"Path":"gridSize","Name":"gridSize","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Grid
+    Settings\""]}],"Initializers":["16"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Grid
+    Size"},{"Path":"secondsBetweenUpdate","Name":"secondsBetweenUpdate","TypeName":"System.Double","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":["1"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Seconds
+    Between Update"}],"SupportedUiEvents":0,"DisplayName":"GameManager","name":"GameManager","hideFlags":8}'

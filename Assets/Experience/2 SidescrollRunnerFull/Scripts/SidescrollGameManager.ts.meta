@@ -1,0 +1,36 @@
+fileFormatVersion: 2
+guid: a11360a575fc346648875d676579b674
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.GameState
+    = void 0;\nconst UnityEngine_1 = require(\"UnityEngine\");\nvar GameState;\n(function
+    (GameState) {\n    GameState[GameState[\"INITIAL\"] = 0] = \"INITIAL\";\n   
+    GameState[GameState[\"LOADING\"] = 1] = \"LOADING\";\n    GameState[GameState[\"GAME_PLAY\"]
+    = 2] = \"GAME_PLAY\";\n    GameState[GameState[\"GAME_OVER\"] = 3] = \"GAME_OVER\";\n})(GameState
+    || (exports.GameState = GameState = {}));\nclass SidescrollGameManager extends
+    UnityEngine_1.MonoBehaviour {\n    constructor() {\n        super(...arguments);\n       
+    /** This is an event that is triggered when the current GameState changes. */\n       
+    this.OnGameStateChange = new GeniesEvent();\n    }\n    Awake() {\n        //Establishes
+    the GameManager singleton instance\n        if (SidescrollGameManager.Instance
+    == null) {\n            SidescrollGameManager.Instance = this;\n        }\n       
+    else {\n            UnityEngine_1.GameObject.Destroy(this.gameObject);\n       
+    }\n    }\n    Start() {\n        //Set the game state to LOADING at the Start\n       
+    //this.ChangeGameState(GameState.LOADING);\n    }\n    /** @returns the game''s
+    current GameState value */\n    GetGameState() {\n        return this.gameState;\n   
+    }\n    /**\n     * This will set the current GameState value to a new value and
+    trigger an event.\n     * @param newState the new GameState value\n     * @returns
+    will return early if the new value equals the current value\n     */\n    ChangeGameState(newState)
+    {\n        if (newState == this.gameState) {\n            return;\n        }\n       
+    console.log(\"New Game State Change: \", newState);\n        this.OnGameStateChange.trigger(newState);\n       
+    this.gameState = newState;\n    }\n}\nexports.default = SidescrollGameManager;\n//#
+    sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiU2lkZXNjcm9sbEdhbWVNYW5hZ2VyLmpzIiwibWFwcGluZ3MiOiI7OztBQUFBLDZDQUF1RDtBQUd2RCxJQUFZLFNBS1o7QUFMQSxXQUFZLFNBQVM7SUFDakIsK0NBQU87SUFDUCwrQ0FBTztJQUNQLG1EQUFTO0lBQ1QsbURBQVM7QUFDYixHQUxZLFNBQVMseUJBQVQsU0FBUyxRQUtyQjtBQUVBLE1BQXFCLHFCQUFzQixTQUFRLDJCQUFhO0lBQWhFOztRQUVJLDZFQUE0RTtRQUNyRSxzQkFBaUIsR0FBNkIsSUFBSSxXQUFXLEVBQWUsQ0FBQztJQXNDeEY7SUFoQ0ksS0FBSztRQUNELGdEQUErQztRQUMvQyxJQUFHLHFCQUFxQixDQUFDLFFBQVEsSUFBSSxJQUFJLEVBQUU7WUFDdkMscUJBQXFCLENBQUMsUUFBUSxHQUFHLElBQUk7UUFDekMsQ0FBQzthQUFJO1lBQ0Qsd0JBQVUsQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQztRQUN2QztJQUNKO0lBRUEsS0FBSztRQUNELDRDQUEyQztRQUMzQywwQ0FBeUM7SUFDN0M7SUFFQSxrREFBaUQ7SUFDMUMsWUFBWTtRQUNmLE9BQU8sSUFBSSxDQUFDLFNBQVM7SUFDekI7SUFFQTs7OztPQUlFO0lBQ0ssZUFBZSxDQUFDLFFBQW1CO1FBQ3RDLElBQUksUUFBUSxJQUFJLElBQUksQ0FBQyxTQUFTLEVBQUU7WUFDNUIsT0FBTTtRQUNWO1FBQ0EsT0FBTyxDQUFDLEdBQUcsQ0FBQyx5QkFBeUIsRUFBRSxRQUFRO1FBQy9DLElBQUksQ0FBQyxpQkFBaUIsQ0FBQyxPQUFPLENBQUMsUUFBUSxDQUFDO1FBQ3hDLElBQUksQ0FBQyxTQUFTLEdBQUcsUUFBUTtJQUM3QjtDQUNKO0FBekNBLHdDQXlDQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiU2lkZXNjcm9sbEdhbWVNYW5hZ2VyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"36c25d38643c843b68782440725c6de7","Specifier":"@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollGameManager","DefaultTypeName":"@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollGameManager.SidescrollGameManager","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/2
+    SidescrollRunnerFull/Scripts/SidescrollGameManager.SidescrollGameManager","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[],"SupportedUiEvents":0,"DisplayName":"SidescrollGameManager","name":"SidescrollGameManager","hideFlags":8}'

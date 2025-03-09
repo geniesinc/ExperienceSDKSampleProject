@@ -1,0 +1,108 @@
+fileFormatVersion: 2
+guid: bbc21ac8a14184930bb70801cf8c7ddb
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/GameManager"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Experience_CloudSave_1 = require(\"Genies.Experience.CloudSave\");\nconst
+    GameManager_1 = require(\"@assets/Experience/1 InfiniteRunnerFull/Scripts/GameManager\");\nclass
+    CanvasController extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.score = 0;\n        this.personalStorageKey
+    = \"PersonalStorageKey\";\n        this.globalStorageKey = \"GlobalStorageKey\";\n       
+    this.floatHighScoreKey = \"FloatHighScoreKey\";\n        this.personalString
+    = \"Personal Best: \";\n        this.globalString = \"Global Best: \";\n    }\n   
+    Start() {\n        //Get GameManager singleton and add a listener to OnGameStateChange
+    event\n        this.gameManager = GameManager_1.default.Instance;\n        this.gameManager.OnGameStateChange.addListener(this.CheckGameState,
+    //@ts-ignore\n        this);\n        //Add listeners to the Button click events\n       
+    this.replayButton.onClick.AddListener(() => this.OnReplayButtonPressed());\n       
+    this.menuButton.onClick.AddListener(() => this.OnMenuButtonPressed());\n       
+    this.playButton.onClick.AddListener(() => this.OnGamePlayButtonPressed());\n       
+    //Initialize both high scores\n        this.InitializeHighScores();\n       
+    //Disable the play button until the avatar is loaded\n        this.playButton.interactable
+    = false;\n    }\n    /** Manages the enemy logic when the game state changes.
+    @param newState */\n    CheckGameState(newState) {\n        switch (newState)
+    {\n            case GameManager_1.GameState.LOADING:\n                this.OnLoading();\n               
+    break;\n            case GameManager_1.GameState.GAME_PLAY:\n               
+    this.OnGamePlay();\n                break;\n            case GameManager_1.GameState.GAME_OVER:\n               
+    this.OnGameOver();\n                break;\n        }\n    }\n    /** This will
+    manage the canvas once the Avatar is loading. */\n    OnLoading() {\n       
+    this.scorePanel.SetActive(false);\n        this.gameOverPanel.SetActive(false);\n       
+    this.loadingPanel.SetActive(true);\n        this.playButton.interactable = true;\n   
+    }\n    OnGamePlay() {\n        this.gameOverPanel.SetActive(false);\n       
+    this.scorePanel.SetActive(true);\n        this.loadingPanel.SetActive(false);\n       
+    this.score = 0;\n        this.scoreCoroutine = this.StartCoroutine(this.StartScore());\n   
+    }\n    /** This will manage the canvas once the game ends. */\n    OnGameOver()
+    {\n        this.gameOverCoroutine = this.StartCoroutine(this.WaitForGameOver());\n       
+    this.gameOverScoreText.text = \"Score: \" + this.score;\n        this.CheckHighScore(this.personalStorage,
+    this.personalHighScoreText, this.personalString);\n        this.CheckHighScore(this.globalStorage,
+    this.globalHighScoreText, this.globalString);\n        if (this.scoreCoroutine)
+    {\n            this.StopCoroutine(this.scoreCoroutine);\n        }\n        this.LoadHighScore(this.globalStorage,
+    this.gameOverGlobalHighScoreText, this.globalString);\n    }\n    /** This will
+    manage the canvas once the game starts. */\n    OnGamePlayButtonPressed() {\n       
+    this.gameManager.ChangeGameState(GameManager_1.GameState.GAME_PLAY);\n    }\n   
+    /** Set the game state back to replay the game. */\n    OnReplayButtonPressed()
+    {\n        this.gameManager.ChangeGameState(GameManager_1.GameState.GAME_PLAY);\n       
+    if (this.gameOverCoroutine) {\n            this.StopCoroutine(this.gameOverCoroutine);\n       
+    }\n    }\n    /** Set the game state back to replay the game. */\n    OnMenuButtonPressed()
+    {\n        this.gameManager.ChangeGameState(GameManager_1.GameState.LOADING);\n       
+    if (this.gameOverCoroutine) {\n            this.StopCoroutine(this.gameOverCoroutine);\n       
+    }\n    }\n    /** Initialize and load both the personal and global high scores.
+    */\n    InitializeHighScores() {\n        //Initialize Personal High Score\n       
+    this.personalStorage = new Genies_Experience_CloudSave_1.CloudSaveStorage(this.personalStorageKey,
+    false);\n        this.LoadHighScore(this.personalStorage, this.personalHighScoreText,
+    this.personalString);\n        //Initialize Global High Score\n        this.globalStorage
+    = new Genies_Experience_CloudSave_1.CloudSaveStorage(this.globalStorageKey, true);\n       
+    this.LoadHighScore(this.globalStorage, this.globalHighScoreText, this.globalString);\n       
+    this.LoadHighScore(this.globalStorage, this.gameOverGlobalHighScoreText, this.globalString);\n   
+    }\n    /** This coroutine will increase and update the score every hundredths
+    of a second. */\n    *StartScore() {\n        while (true) {\n            this.score
+    += 1;\n            this.scoreText.text = \"Score: \" + this.score;\n           
+    yield new UnityEngine_1.WaitForSeconds(0.01);\n        }\n    }\n    /**\n    
+    * This loads a high score from storage and then displays it to a text object.\n    
+    * * It will also create a new stored high score if it does not find a stored
+    one.\n     * @param storage the CloudSaveStorage to load from\n     * @param
+    textObj  the text object to change the text\n     * @param highScoreString the
+    leading string to prepend to the text\n     */\n    async LoadHighScore(storage,
+    textObj, highScoreString) {\n        await $promise(storage.Load());\n       
+    if (storage.Has(this.floatHighScoreKey)) {\n            let highScore = storage.GetFloat(this.floatHighScoreKey);\n           
+    textObj.text = highScoreString + highScore.toString();\n        }\n        else
+    {\n            storage.SetFloat(this.floatHighScoreKey, 0);\n            textObj.text
+    = highScoreString + \"0\";\n            await $promise(storage.Save());\n       
+    }\n    }\n    /**\n     * This checks if a stored high score is less than the
+    current score.\n     * * If it is, then the high score is updated in storage
+    and text.\n     * @param storage the CloudSaveStorage storing the high score\n    
+    * @param textObj the high score text object\n     * @param highScoreString the
+    leading string to prepend to the text\n     */\n    async CheckHighScore(storage,
+    textObj, highScoreString) {\n        await $promise(storage.Load());\n       
+    if (storage.Has(this.floatHighScoreKey)) {\n            let highScore = storage.GetFloat(this.floatHighScoreKey);\n           
+    if (this.score > highScore) {\n                storage.SetFloat(this.floatHighScoreKey,
+    this.score);\n                textObj.text = highScoreString + this.score.toString();\n               
+    await $promise(storage.Save());\n            }\n        }\n    }\n    *WaitForGameOver()
+    {\n        while (true) {\n            yield new UnityEngine_1.WaitForSeconds(2);\n           
+    this.gameOverPanel.SetActive(true);\n            this.loadingPanel.SetActive(false);\n           
+    this.scorePanel.SetActive(false);\n        }\n    }\n}\nexports.default = CanvasController;\n//#
+    sourceMappingURL=data:application/json;charset=utf-8;base64,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LE1BQUssU0FBQyxPQUFPLENBQUMsSUFBSSxFQUFDLENBQUM7UUFDcEIsSUFBSSxPQUFPLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxpQkFBaUIsQ0FBQyxFQUFFO1lBQ3JDLElBQUksU0FBUyxHQUFHLE9BQU8sQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLGlCQUFpQixDQUFDO1lBQ3hELElBQUcsSUFBSSxDQUFDLEtBQUssR0FBRyxTQUFTLEVBQUU7Z0JBQ3ZCLE9BQU8sQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLGlCQUFpQixFQUFFLElBQUksQ0FBQyxLQUFLLENBQUM7Z0JBQ3BELE9BQU8sQ0FBQyxJQUFJLEdBQUcsZUFBZSxHQUFHLElBQUksQ0FBQyxLQUFLLENBQUMsUUFBUSxFQUFFO2dCQUN0RCxNQUFLLFNBQUMsT0FBTyxDQUFDLElBQUksRUFBQyxDQUFDO1lBQ3hCO1FBQ0o7SUFDSjtJQUVRLENBQUMsZUFBZTtRQUNwQixPQUFNLElBQUksRUFBRTtZQUNSLE1BQU0sSUFBSSw0QkFBYyxDQUFDLENBQUMsQ0FBQztZQUUzQixJQUFJLENBQUMsYUFBYSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7WUFDbEMsSUFBSSxDQUFDLFlBQVksQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1lBQ2xDLElBQUksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztRQUNwQztJQUNKO0NBQ0o7QUExTEEsbUNBMExBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJDYW52YXNDb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"c7a67115e770958e70859ad1c95aeadf","Specifier":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/CanvasController","DefaultTypeName":"@assets/Experience/1
+    InfiniteRunnerFull/Scripts/CanvasController.CanvasController","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/1
+    InfiniteRunnerFull/Scripts/CanvasController.CanvasController","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"loadingPanel","Name":"loadingPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Main
+    Menu UI References\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Loading
+    Panel"},{"Path":"playButton","Name":"playButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Play
+    Button"},{"Path":"globalHighScoreText","Name":"globalHighScoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Global
+    High Score Text"},{"Path":"scorePanel","Name":"scorePanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Game
+    Scene UI References\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Score
+    Panel"},{"Path":"scoreText","Name":"scoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Score
+    Text"},{"Path":"gameOverPanel","Name":"gameOverPanel","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"Header","Args":["\"Game
+    Over UI References\""]},{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Game
+    Over Panel"},{"Path":"replayButton","Name":"replayButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Replay
+    Button"},{"Path":"menuButton","Name":"menuButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Menu
+    Button"},{"Path":"personalHighScoreText","Name":"personalHighScoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Personal
+    High Score Text"},{"Path":"gameOverScoreText","Name":"gameOverScoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Game
+    Over Score Text"},{"Path":"gameOverGlobalHighScoreText","Name":"gameOverGlobalHighScoreText","TypeName":"TMPro.TMP_Text","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Game
+    Over Global High Score Text"}],"SupportedUiEvents":0,"DisplayName":"CanvasController","name":"CanvasController","hideFlags":8}'
