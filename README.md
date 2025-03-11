@@ -1,9 +1,10 @@
 # ExperienceSDKSampleProject
 
+## THIS PROJECT REQUIRES (UNITY 2022.3.32f1)[https://unity.com/releases/editor/whats-new/2022.3.32#installs]
+
 ## How to Use this Project
 
-1. Make sure you have Unity version 2022.3.32f1 installed
-2. Download the zip or clone the project and add the created folder to Unity Hub
+Download the zip or clone the project and add the created folder to Unity Hub.
 
 This project includes various scenes and sample scripts for loading a Genies avatar, using mobile input, and seeing how TypeScript is written.
 
