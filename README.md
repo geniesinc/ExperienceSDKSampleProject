@@ -1,18 +1,18 @@
 # ExperienceSDKSampleProject
 
-## THIS PROJECT REQUIRES (UNITY 2022.3.32f1)[https://unity.com/releases/editor/whats-new/2022.3.32#installs]
+## THIS PROJECT REQUIRES [UNITY 2022.3.32f1](https://unity.com/releases/editor/whats-new/2022.3.32#installs)
 
-## How to Use this Project
+### How to Use this Project
 
 Download the zip or clone the project and add the created folder to Unity Hub.
 
 This project includes various scenes and sample scripts for loading a Genies avatar, using mobile input, and seeing how TypeScript is written.
 
-## Notes:
+### Notes:
 1. When opening the project in Unity, many errors and warnings will pop up in the console. These don't impact the actual project itself - you can open one of the sample scenes and play, and it should run.
 2. This project is usable without having an active Genies account - however, you won't be able to upload a build to playtest unless you are logged in.
 
-## Licensing
+### Licensing
 © 2024 Genies, Inc.
 
 Genies, Inc. hereby grants you permission, free of charge and without any limitation, to use, copy, modify, merge, publish, distribute, remix, transform, build upon, sublicense, and sell this software and associated documentation, and to permit others to use the software without any restriction, subject to the following conditions:
