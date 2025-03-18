@@ -8,7 +8,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
-  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.9","ReferencedSpecifiers":[],"Source":"\"use
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":[],"Source":"\"use
     strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.GameState
     = void 0;\nconst UnityEngine_1 = require(\"UnityEngine\");\nvar GameState;\n(function
     (GameState) {\n    GameState[GameState[\"INITIAL\"] = 0] = \"INITIAL\";\n   
@@ -16,24 +16,22 @@ ScriptedImporter:
     = 2] = \"GAME_PLAY\";\n    GameState[GameState[\"GAME_OVER\"] = 3] = \"GAME_OVER\";\n})(GameState
     || (exports.GameState = GameState = {}));\nclass BasketballGameManager extends
     UnityEngine_1.MonoBehaviour {\n    constructor() {\n        super(...arguments);\n       
-    /** This is an event triggered when the current GameState changes. */\n       
-    this.OnGameStateChange = new GeniesEvent();\n        /** This is an event triggered
-    when the player has made a shot. */\n        this.OnShotMade = new GeniesEvent();\n       
-    /** This is an event when the player is attempting a shot. */\n        this.OnShotAttempted
-    = new GeniesEvent();\n    }\n    Awake() {\n        //Create a singleton static
-    instance reference\n        if (BasketballGameManager.Instance == null) {\n           
-    BasketballGameManager.Instance = this;\n        }\n        else {\n           
-    UnityEngine_1.GameObject.Destroy(this.gameObject);\n        }\n    }\n    Start()
-    {\n        //Set the game state to LOADING at the Start\n        this.ChangeGameState(GameState.LOADING);\n       
-    UnityEngine_1.Debug.Log(\"Game Manager Started\");\n    }\n    /** @returns the
-    game''s current GameState value */\n    GetGameState() {\n        return this.gameState;\n   
-    }\n    /**\n     * This will set the current GameState value to a new value and
-    trigger an event.\n     * @param newState the new GameState value\n     * @returns
-    will return early if the new value equals the current value\n     */\n    ChangeGameState(newState)
+    this.OnGameStateChange = new GeniesEvent();\n        this.OnShotMade = new GeniesEvent();\n       
+    this.OnShotAttempted = new GeniesEvent();\n    }\n    Awake() {\n        //Create
+    a singleton static instance reference\n        if (BasketballGameManager.Instance
+    == null) {\n            BasketballGameManager.Instance = this;\n        }\n       
+    else {\n            UnityEngine_1.GameObject.Destroy(this.gameObject);\n       
+    }\n    }\n    Start() {\n        //Set the game state to LOADING at the Start\n       
+    this.ChangeGameState(GameState.LOADING);\n        UnityEngine_1.Debug.Log(\"Game
+    Manager Started\");\n    }\n    /** @returns the game''s current GameState value
+    */\n    GetGameState() {\n        return this.gameState;\n    }\n    /**\n    
+    * This will set the current GameState value to a new value and trigger an event.\n    
+    * @param newState the new GameState value\n     * @returns will return early
+    if the new value equals the current value\n     */\n    ChangeGameState(newState)
     {\n        if (newState == this.gameState) {\n            return;\n        }\n       
     //console.log(\"New Game State Change: \", newState)\n        this.OnGameStateChange.trigger(newState);\n       
     this.gameState = newState;\n    }\n}\nexports.default = BasketballGameManager;\n//#
-    sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQmFza2V0YmFsbEdhbWVNYW5hZ2VyLmpzIiwibWFwcGluZ3MiOiI7OztBQUFBLDZDQUF1RTtBQUd2RSxJQUFZLFNBS1o7QUFMQSxXQUFZLFNBQVM7SUFDakIsK0NBQU87SUFDUCwrQ0FBTztJQUNQLG1EQUFTO0lBQ1QsbURBQVE7QUFDWixHQUxZLFNBQVMseUJBQVQsU0FBUyxRQUtyQjtBQUVBLE1BQXFCLHFCQUFzQixTQUFRLDJCQUFhO0lBQWhFOztRQUVJLHFFQUFvRTtRQUM3RCxzQkFBaUIsR0FBNkIsSUFBSSxXQUFXLEVBQWUsQ0FBQztRQUNwRixrRUFBaUU7UUFDMUQsZUFBVSxHQUFvQixJQUFJLFdBQVcsRUFBTSxDQUFDO1FBQzNELDZEQUE0RDtRQUNyRCxvQkFBZSxHQUFvQyxJQUFJLFdBQVcsRUFBc0IsQ0FBQztJQXlDcEc7SUFqQ0ksS0FBSztRQUNELDhDQUE2QztRQUM3QyxJQUFHLHFCQUFxQixDQUFDLFFBQVEsSUFBSSxJQUFJLEVBQUU7WUFDdkMscUJBQXFCLENBQUMsUUFBUSxHQUFHLElBQUk7UUFDekMsQ0FBQzthQUFJO1lBQ0Qsd0JBQVUsQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQztRQUN2QztJQUNKO0lBRUEsS0FBSztRQUNELDRDQUEyQztRQUMzQyxJQUFJLENBQUMsZUFBZSxDQUFDLFNBQVMsQ0FBQyxPQUFPLENBQUM7UUFDdkMsbUJBQUssQ0FBQyxHQUFHLENBQUMsc0JBQXNCLENBQUM7SUFDckM7SUFFQSxrREFBaUQ7SUFDMUMsWUFBWTtRQUNmLE9BQU8sSUFBSSxDQUFDLFNBQVM7SUFDekI7SUFFQTs7OztPQUlFO0lBQ0ssZUFBZSxDQUFDLFFBQW1CO1FBQ3RDLElBQUksUUFBUSxJQUFJLElBQUksQ0FBQyxTQUFTLEVBQUU7WUFDNUIsT0FBTTtRQUNWO1FBQ0Esa0RBQWlEO1FBQ2pELElBQUksQ0FBQyxpQkFBaUIsQ0FBQyxPQUFPLENBQUMsUUFBUSxDQUFDO1FBQ3hDLElBQUksQ0FBQyxTQUFTLEdBQUcsUUFBUTtJQUM3QjtDQUNKO0FBaERBLHdDQWdEQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQmFza2V0YmFsbEdhbWVNYW5hZ2VyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"c657c978c93da096aa27ecf148a8adaa","Specifier":"@assets/Experience/4
+    sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQmFza2V0YmFsbEdhbWVNYW5hZ2VyLmpzIiwibWFwcGluZ3MiOiI7OztBQUFBLDZDQUF1RTtBQUd2RSxJQUFZLFNBS1o7QUFMQSxXQUFZLFNBQVM7SUFDakIsK0NBQU87SUFDUCwrQ0FBTztJQUNQLG1EQUFTO0lBQ1QsbURBQVE7QUFDWixHQUxZLFNBQVMseUJBQVQsU0FBUyxRQUtyQjtBQUVBLE1BQXFCLHFCQUFzQixTQUFRLDJCQUFhO0lBQWhFOztRQUcwQixzQkFBaUIsR0FBNkIsSUFBSSxXQUFXLEVBQWUsQ0FFcEY7UUFBUSxlQUFVLEdBQW9CLElBQUksV0FBVyxFQUFNLENBRTNEO1FBQVEsb0JBQWUsR0FBb0MsSUFBSSxXQUFXLEVBQXNCLENBR2hHO0lBc0NsQjtJQWpDSSxLQUFLO1FBQ0QsOENBQTZDO1FBQzdDLElBQUcscUJBQXFCLENBQUMsUUFBUSxJQUFJLElBQUksRUFBRTtZQUN2QyxxQkFBcUIsQ0FBQyxRQUFRLEdBQUcsSUFBSTtRQUN6QyxDQUFDO2FBQUk7WUFDRCx3QkFBVSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDO1FBQ3ZDO0lBQ0o7SUFFQSxLQUFLO1FBQ0QsNENBQTJDO1FBQzNDLElBQUksQ0FBQyxlQUFlLENBQUMsU0FBUyxDQUFDLE9BQU8sQ0FBQztRQUN2QyxtQkFBSyxDQUFDLEdBQUcsQ0FBQyxzQkFBc0IsQ0FBQztJQUNyQztJQUVBLGtEQUFpRDtJQUMxQyxZQUFZO1FBQ2YsT0FBTyxJQUFJLENBQUMsU0FBUztJQUN6QjtJQUVBOzs7O09BSUU7SUFDSyxlQUFlLENBQUMsUUFBbUI7UUFDdEMsSUFBSSxRQUFRLElBQUksSUFBSSxDQUFDLFNBQVMsRUFBRTtZQUM1QixPQUFNO1FBQ1Y7UUFDQSxrREFBaUQ7UUFDakQsSUFBSSxDQUFDLGlCQUFpQixDQUFDLE9BQU8sQ0FBQyxRQUFRLENBQUM7UUFDeEMsSUFBSSxDQUFDLFNBQVMsR0FBRyxRQUFRO0lBQzdCO0NBQ0o7QUFoREEsd0NBZ0RBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJCYXNrZXRiYWxsR2FtZU1hbmFnZXIudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"c657c978c93da096aa27ecf148a8adaa","Specifier":"@assets/Experience/4
     Basketball/Scripts/BasketballGameManager","DefaultTypeName":"@assets/Experience/4
     Basketball/Scripts/BasketballGameManager.BasketballGameManager","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/4
-    Basketball/Scripts/BasketballGameManager.BasketballGameManager","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.6.0/Runtime/Typing/index.d.System.Object"],"Properties":[],"SupportedUiEvents":0,"DisplayName":"BasketballGameManager","name":"BasketballGameManager","hideFlags":8}'
+    Basketball/Scripts/BasketballGameManager.BasketballGameManager","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[],"SupportedUiEvents":"None","DisplayName":"BasketballGameManager","name":"BasketballGameManager","hideFlags":"NotEditable"}'

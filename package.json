@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "genies-typescript-compiler": "file:Genies/Scripting/genies-typescript-compiler-2.0.9.tgz",
+    "genies-typescript-compiler": "file:Genies/Scripting/genies-typescript-compiler-2.0.63.tgz",
     "typescript": "^5.4.5"
   }
 }

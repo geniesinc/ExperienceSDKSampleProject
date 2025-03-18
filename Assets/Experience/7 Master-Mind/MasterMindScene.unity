@@ -1897,7 +1897,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: decoderPanel
@@ -1950,7 +1949,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: resultsPanel
@@ -2003,7 +2001,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: resultsText
@@ -2056,7 +2053,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: retryButton
@@ -2109,7 +2105,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: titlePanel
@@ -2162,7 +2157,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: playButton
@@ -2216,7 +2210,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: playerAnimator

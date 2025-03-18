@@ -1,0 +1,42 @@
+fileFormatVersion: 2
+guid: b0b9c3b330de0422ba3587c404109846
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":["@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardView"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Experience_Sdk_1 = require(\"Genies.Experience.Sdk\");\nconst Genies_Leaderboard_1
+    = require(\"Genies.Leaderboard\");\nconst Genies_SDKServices_Model_LeaderboardSubmitUserScoreRequest_1
+    = require(\"Genies.SDKServices.Model.LeaderboardSubmitUserScoreRequest\");\nclass
+    LeaderboardManager extends UnityEngine_1.MonoBehaviour {\n    async Awake() {\n       
+    const leaderboard = // @ts-ignore\n         this.leaderboard.GetComponent(\"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardView.LeaderboardView\");\n        this.showButton.gameObject.SetActive(false);\n       
+    this.hideButton.gameObject.SetActive(false);\n        this.incrementScore.gameObject.SetActive(false);\n       
+    this.showButton.onClick.RemoveAllListeners();\n        this.hideButton.onClick.RemoveAllListeners();\n       
+    this.incrementScore.onClick.RemoveAllListeners();\n        this.showButton.onClick.AddListener(()
+    => leaderboard.Show());\n        this.hideButton.onClick.AddListener(() => leaderboard.Hide());\n       
+    this.incrementScore.onClick.AddListener(() => this.IncrementScore(leaderboard));\n       
+    await $promise(Genies_Experience_Sdk_1.GeniesExperienceSdk.InitializeAsync());\n       
+    this.showButton.gameObject.SetActive(true);\n        this.hideButton.gameObject.SetActive(true);\n       
+    this.incrementScore.gameObject.SetActive(true);\n        leaderboard.SetDataAndInitialize(this.leaderboardId);\n   
+    }\n    async IncrementScore(leaderboard) {\n        let currentScore = await
+    $promise(Genies_Leaderboard_1.GeniesLeaderboardSdk.GetCurrentUserRankAsync(this.leaderboardId));\n       
+    if (currentScore != null) {\n            $promise(Genies_Leaderboard_1.GeniesLeaderboardSdk.SubmitCurrentUserScoreAsync(this.leaderboardId,
+    currentScore.GameScore + 20, Genies_SDKServices_Model_LeaderboardSubmitUserScoreRequest_1.TypeEnum.DIRECT));\n       
+    }\n        else {\n            $promise(Genies_Leaderboard_1.GeniesLeaderboardSdk.SubmitCurrentUserScoreAsync(this.leaderboardId,
+    20, Genies_SDKServices_Model_LeaderboardSubmitUserScoreRequest_1.TypeEnum.DIRECT));\n       
+    }\n        leaderboard.SetDataAndInitialize(this.leaderboardId);\n    }\n}\nexports.default
+    = LeaderboardManager;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiTGVhZGVyQm9hcmRNYW5hZ2VyLmpzIiwibWFwcGluZ3MiOiI7O0FBQUEsNkNBQXFEO0FBQ3JELGlFQUF5RDtBQUN6RCwyREFBdUQ7QUFDdkQsMklBQW1GO0FBS25GLE1BQXFCLGtCQUFtQixTQUFRLDJCQUFhO0lBT2pELEtBQUssQ0FBQyxLQUFLO1FBRWYsTUFBTSxXQUFXLEdBQUU7U0FBQyxJQUFJLENBQUMsV0FBVyxDQUFDLFlBQVcsb0ZBQWdCLENBQUk7UUFFcEUsSUFBSSxDQUFDLFVBQVUsQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztRQUMzQyxJQUFJLENBQUMsVUFBVSxDQUFDLFVBQVUsQ0FBQyxTQUFTLENBQUMsS0FBSyxDQUFDO1FBQzNDLElBQUksQ0FBQyxjQUFjLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxLQUFLLENBQUM7UUFFL0MsSUFBSSxDQUFDLFVBQVUsQ0FBQyxPQUFPLENBQUMsa0JBQWtCLEVBQUU7UUFDNUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxPQUFPLENBQUMsa0JBQWtCLEVBQUU7UUFDNUMsSUFBSSxDQUFDLGNBQWMsQ0FBQyxPQUFPLENBQUMsa0JBQWtCLEVBQUU7UUFFaEQsSUFBSSxDQUFDLFVBQVUsQ0FBQyxPQUFPLENBQUMsV0FBVyxDQUFDLEdBQUcsRUFBRSxDQUFDLFdBQVcsQ0FBQyxJQUFJLEVBQUUsQ0FBQztRQUM3RCxJQUFJLENBQUMsVUFBVSxDQUFDLE9BQU8sQ0FBQyxXQUFXLENBQUMsR0FBRyxFQUFFLENBQUMsV0FBVyxDQUFDLElBQUksRUFBRSxDQUFDO1FBQzdELElBQUksQ0FBQyxjQUFjLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxHQUFHLEVBQUUsQ0FBQyxJQUFJLENBQUMsY0FBYyxDQUFDLFdBQVcsQ0FBQyxDQUFDO1FBRS9FLE1BQUssU0FBQywyQ0FBbUIsQ0FBQyxlQUFlLEVBQUMsQ0FBQztRQUUzQyxJQUFJLENBQUMsVUFBVSxDQUFDLFVBQVUsQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO1FBQzFDLElBQUksQ0FBQyxVQUFVLENBQUMsVUFBVSxDQUFDLFNBQVMsQ0FBQyxJQUFJLENBQUM7UUFDMUMsSUFBSSxDQUFDLGNBQWMsQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQztRQUU5QyxXQUFXLENBQUMsb0JBQW9CLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQztJQUN4RDtJQUVRLEtBQUssQ0FBQyxjQUFjLENBQUMsV0FBNEI7UUFDckQsSUFBSSxZQUFZLEdBQUksTUFBSyxTQUFDLHlDQUFvQixDQUFDLHVCQUF1QixDQUFDLElBQUksQ0FBQyxhQUFhLEVBQUM7UUFDMUYsSUFBSSxZQUFZLElBQUksSUFBSSxFQUFFO1lBQ3ZCLFNBQUMseUNBQW9CLENBQUMsMkJBQTJCLENBQUMsSUFBSSxDQUFDLGFBQWEsRUFBRSxZQUFZLENBQUMsU0FBUyxHQUFHLEVBQUUsRUFBRSxxRUFBUSxDQUFDLE1BQU0sRUFBQztRQUN0SDthQUNLO1lBQ0YsU0FBQyx5Q0FBb0IsQ0FBQywyQkFBMkIsQ0FBQyxJQUFJLENBQUMsYUFBYSxFQUFFLEVBQUUsRUFBRSxxRUFBUSxDQUFDLE1BQUssQ0FBQyxDQUFDO1FBQzdGO1FBQ0EsV0FBVyxDQUFDLG9CQUFvQixDQUFDLElBQUksQ0FBQyxhQUFhLENBQUM7SUFDeEQ7Q0FDSjtBQTFDQSxxQ0EwQ0EiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkxlYWRlckJvYXJkTWFuYWdlci50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"5a2a00b0f442c553706634b7b17587c6","Specifier":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderBoardManager","DefaultTypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderBoardManager.LeaderboardManager","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderBoardManager.LeaderboardManager","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"leaderboard","Name":"leaderboard","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Leaderboard","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"showButton","Name":"showButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Show
+    Button","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"hideButton","Name":"hideButton","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Hide
+    Button","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"incrementScore","Name":"incrementScore","TypeName":"UnityEngine.UI.Button","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Increment
+    Score","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"leaderboardId","Name":"leaderboardId","TypeName":"System.String","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Leaderboard
+    Id","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null}],"SupportedUiEvents":"None","DisplayName":"LeaderboardManager","name":"LeaderBoardManager","hideFlags":"NotEditable"}'

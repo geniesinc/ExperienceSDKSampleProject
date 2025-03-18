@@ -1247,7 +1247,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: gridPanel
@@ -1301,7 +1300,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: pixelPrefab
@@ -1354,7 +1352,6 @@ MonoBehaviour:
     ArrayLength: 8
     IsArray: 1
     ArrayDimension: 1
-    IsExpanded: 1
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons
@@ -1407,7 +1404,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: currentColorImage
@@ -1460,7 +1456,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: gridSize
@@ -1513,7 +1508,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: secondsBetweenUpdate
@@ -1566,7 +1560,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[0]
@@ -1619,7 +1612,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[1]
@@ -1672,7 +1664,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[2]
@@ -1725,7 +1716,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[3]
@@ -1778,7 +1768,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[4]
@@ -1831,7 +1820,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[5]
@@ -1884,7 +1872,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[6]
@@ -1937,7 +1924,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: 0
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: selectColorButtons.[7]

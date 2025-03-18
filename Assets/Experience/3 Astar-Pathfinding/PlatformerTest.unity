@@ -216,7 +216,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: tilePrefab
@@ -269,7 +268,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 5
     PropKey: rowAmount
@@ -322,7 +320,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 5
     PropKey: columnAmount
@@ -375,7 +372,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 7
     PropKey: obstacleChance
@@ -428,11 +424,62 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 19
     PropKey: playerSpawn
     BasePath: playerSpawn
+  - IntValue: 0
+    LongValue: 0
+    DoubleValue: 0
+    FloatValue: 0
+    BoolValue: 0
+    StringValue: 
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    UnityObjectReference: {fileID: 0}
+    LayerMaskValue:
+      serializedVersion: 2
+      m_Bits: 0
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
+    RectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    AnimationCurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    BoundsValue:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    QuaternionValue: {x: 0, y: 0, z: 0, w: 0}
+    Vector2IntValue: {x: 0, y: 0}
+    Vector3IntValue: {x: 0, y: 0, z: 0}
+    RectIntValue:
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    BoundsIntValue:
+      m_Position: {x: 0, y: 0, z: 0}
+      m_Size: {x: 0, y: 0, z: 0}
+    GeniesBehaviourReference: {fileID: 0}
+    GeniesSOReference: {fileID: 0}
+    SerializedCsObjectValue: 
+    CsObjectReferences: []
+    TypeName: '@com.genies.scripting@1.6.0/Runtime/Typing/global.d.global.GeniesEvent'
+    ArrayLength: 0
+    IsArray: 0
+    ArrayDimension: -1
+    IsPrefabOverride: 0
+    PropType: 0
+    PropKey: OnPathFound
+    BasePath: OnPathFound
   _script: {fileID: 4458252877524076426, guid: c291aa7a665770d4eb948342b2f33db7, type: 3}
   _scriptAssetHash: 8de101bfcc625d8df1970e2488d5a545
   UiEventForwarders: []
@@ -553,7 +600,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: walkSpeed
@@ -607,7 +653,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: playerAnimatorController
@@ -660,7 +705,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 1
     PropKey: mapGenerator

@@ -4,7 +4,7 @@
     "target": "es2020",
     "baseUrl": ".",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "inlineSourceMap": true,
     "stripInternal": true,
     "noImplicitAny": false,
@@ -17,83 +17,93 @@
       }
     ],
     "types": [
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Cinemachine.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/DOTween.Modules.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/DOTween.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Avatars.Sdk.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Experience.CloudSave.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Experience.Sdk.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Experience.Shared.Bindings.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Multiplayer.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Scripting.Bindings.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Services.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.ThirdParty.CharacterControllers.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Genies.Traits.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/LeanCommon.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/LeanTouch.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/mscorlib.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/SmartFox2X.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UniTask.DOTween.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UniTask.Linq.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UniTask.TextMeshPro.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UniTask.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Unity.InputSystem.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Unity.TextMeshPro.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/Unity.Timeline.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.AIModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.AnimationModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.AudioModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.CoreModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.IMGUIModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.InputLegacyModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.ParticleSystemModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.Physics2DModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.PhysicsModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.TerrainModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.TerrainPhysicsModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.UI.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.UIModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.VehiclesModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.experience.sdk@1.2.11/Generated/Bindings/Typing/UnityEngine.WindModule.Typing/index.d.ts",
-      "./Library/PackageCache/com.genies.scripting@1.6.0/Runtime/Typing/global.d.ts",
-      "./Library/PackageCache/com.genies.scripting@1.6.0/Runtime/Typing/index.d.ts"
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Cinemachine.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/DOTween.Modules.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/DOTween.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Avatars.Sdk.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Experience.CloudSave.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Experience.Sdk.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Experience.Shared.Bindings.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Leaderboard.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Login.Native.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Profiles.Sdk.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Refs.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Scripting.Bindings.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Services.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.ThirdParty.CharacterControllers.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Traits.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.UIFramework.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Genies.Utilities.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/LeanCommon.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/LeanTouch.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/mscorlib.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/SmartFox2X.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UniTask.DOTween.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UniTask.TextMeshPro.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UniTask.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Unity.InputSystem.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Unity.TextMeshPro.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/Unity.Timeline.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.AIModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.AnimationModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.AudioModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.CoreModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.IMGUIModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.InputLegacyModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.ParticleSystemModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.Physics2DModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.PhysicsModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.TerrainModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.TerrainPhysicsModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.UI.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.UIModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.VehiclesModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.experience.sdk@1.3.14/Generated/Bindings/Typing/UnityEngine.WindModule.Typing/index.d.ts",
+      "./Library/PackageCache/com.genies.scripting@1.11.0/Runtime/Typing/global.d.ts",
+      "./Library/PackageCache/com.genies.scripting@1.11.0/Runtime/Typing/index.d.ts"
     ],
     "paths": {
       "@assets/*": [
         "Assets/*"
       ],
       "@com.genies.experience.sdk/*": [
-        "./Library/PackageCache/com.genies.experience.sdk@1.2.11/*"
+        "./Library/PackageCache/com.genies.experience.sdk@1.3.14/*"
       ],
       "@com.genies.avatars.sdk/*": [
-        "./Library/PackageCache/com.genies.avatars.sdk@1.0.7/*"
+        "./Library/PackageCache/com.genies.avatars.sdk@1.0.9/*"
       ],
       "@com.genies.experience.shared/*": [
-        "./Library/PackageCache/com.genies.experience.shared@1.1.0/*"
+        "./Library/PackageCache/com.genies.experience.shared@1.1.1/*"
       ],
       "@com.genies.experience.bootstrapping/*": [
-        "./Library/PackageCache/com.genies.experience.bootstrapping@1.3.0/*"
+        "./Library/PackageCache/com.genies.experience.bootstrapping@1.4.2/*"
       ],
       "@com.genies.experience.cloudsave/*": [
-        "./Library/PackageCache/com.genies.experience.cloudsave@1.0.1/*"
+        "./Library/PackageCache/com.genies.experience.cloudsave@1.0.3/*"
       ],
       "@com.genies.experience.manifest/*": [
         "./Library/PackageCache/com.genies.experience.manifest@1.0.0/*"
       ],
+      "@com.genies.utilities/*": [
+        "./Library/PackageCache/com.genies.utilities@1.2.0/*"
+      ],
+      "@com.genies.leaderboard/*": [
+        "./Library/PackageCache/com.genies.leaderboard@2.0.0/*"
+      ],
       "@com.genies.graphqlclient/*": [
-        "./Library/PackageCache/com.genies.graphqlclient@1.0.1/*"
+        "./Library/PackageCache/com.genies.graphqlclient@1.0.3/*"
       ],
       "@com.genies.login.native/*": [
-        "./Library/PackageCache/com.genies.login.native@1.1.1/*"
+        "./Library/PackageCache/com.genies.login.native@1.1.3/*"
       ],
       "@com.genies.multiplayer/*": [
-        "./Library/PackageCache/com.genies.multiplayer@1.1.6/*"
+        "./Library/PackageCache/com.genies.multiplayer@1.1.9/*"
       ],
       "@com.genies.scripting/*": [
-        "./Library/PackageCache/com.genies.scripting@1.6.0/*"
+        "./Library/PackageCache/com.genies.scripting@1.11.0/*"
       ],
       "@com.genies.services/*": [
-        "./Library/PackageCache/com.genies.services@1.0.0/*"
+        "./Library/PackageCache/com.genies.services@1.1.0/*"
       ],
       "@com.genies.thirdparty.charactercontrollers/*": [
         "./Library/PackageCache/com.genies.thirdparty.charactercontrollers@1.1.2/*"
@@ -102,13 +112,19 @@
         "./Library/PackageCache/com.genies.thirdparty.unitask@1.0.0/*"
       ],
       "@com.genies.traits/*": [
-        "./Library/PackageCache/com.genies.traits@1.0.0/*"
+        "./Library/PackageCache/com.genies.traits@1.0.1/*"
       ],
       "@com.genies.thirdparty.dotween/*": [
         "./Library/PackageCache/com.genies.thirdparty.dotween@1.0.0/*"
       ],
       "@com.genies.thirdparty.leantouch/*": [
         "./Library/PackageCache/com.genies.thirdparty.leantouch@1.0.0/*"
+      ],
+      "@com.genies.profiles.sdk/*": [
+        "./Library/PackageCache/com.genies.profiles.sdk@1.0.1/*"
+      ],
+      "@com.genies.refs/*": [
+        "./Library/PackageCache/com.genies.refs@1.0.0/*"
       ],
       "@com.genies.packages.bootstrap/*": [
         "./Library/PackageCache/com.genies.packages.bootstrap@1.0.0/*"
@@ -119,14 +135,11 @@
       "@com.genies.abtesting/*": [
         "./Library/PackageCache/com.genies.abtesting@1.0.0/*"
       ],
-      "@com.genies.utilities/*": [
-        "./Library/PackageCache/com.genies.utilities@1.0.2/*"
-      ],
       "@com.genies.scripting.shared/*": [
-        "./Library/PackageCache/com.genies.scripting.shared@1.0.0/*"
+        "./Library/PackageCache/com.genies.scripting.shared@1.1.1/*"
       ],
       "@com.genies.avatars/*": [
-        "./Library/PackageCache/com.genies.avatars@1.0.3/*"
+        "./Library/PackageCache/com.genies.avatars@1.1.1/*"
       ],
       "@com.genies.login/*": [
         "./Library/PackageCache/com.genies.login@1.0.1/*"
@@ -137,32 +150,32 @@
       "@com.genies.graphqlimporter/*": [
         "./Library/PackageCache/com.genies.graphqlimporter@1.0.0/*"
       ],
-      "@com.genies.sdktools/*": [
-        "./Library/PackageCache/com.genies.sdktools@1.0.0/*"
-      ],
-      "@com.genies.thirdparty.editor-toolbox/*": [
-        "./Library/PackageCache/com.genies.thirdparty.editor-toolbox@1.0.0/*"
-      ],
-      "@com.genies.qrcode/*": [
-        "./Library/PackageCache/com.genies.qrcode@1.0.0/*"
+      "@com.genies.thirdparty.roundedcorners/*": [
+        "./Library/PackageCache/com.genies.thirdparty.roundedcorners@1.1.0/*"
       ],
       "@com.genies.servicemanagement/*": [
         "./Library/PackageCache/com.genies.servicemanagement@1.0.1/*"
       ],
-      "@com.genies.avatars.services/*": [
-        "./Library/PackageCache/com.genies.avatars.services@1.0.4/*"
-      ],
-      "@com.genies.looks/*": [
-        "./Library/PackageCache/com.genies.looks@1.0.3/*"
-      ],
-      "@com.genies.avatars.context/*": [
-        "./Library/PackageCache/com.genies.avatars.context@1.0.7/*"
-      ],
-      "@com.genies.refs/*": [
-        "./Library/PackageCache/com.genies.refs@1.0.0/*"
+      "@com.genies.thirdparty.editor-toolbox/*": [
+        "./Library/PackageCache/com.genies.thirdparty.editor-toolbox@1.0.0/*"
       ],
       "@com.genies.thirdparty.vcontainer/*": [
         "./Library/PackageCache/com.genies.thirdparty.vcontainer@1.0.0/*"
+      ],
+      "@com.genies.sdktools/*": [
+        "./Library/PackageCache/com.genies.sdktools@1.0.0/*"
+      ],
+      "@com.genies.qrcode/*": [
+        "./Library/PackageCache/com.genies.qrcode@1.0.0/*"
+      ],
+      "@com.genies.avatars.services/*": [
+        "./Library/PackageCache/com.genies.avatars.services@1.0.5/*"
+      ],
+      "@com.genies.looks/*": [
+        "./Library/PackageCache/com.genies.looks@1.0.5/*"
+      ],
+      "@com.genies.avatars.context/*": [
+        "./Library/PackageCache/com.genies.avatars.context@1.0.9/*"
       ],
       "@com.genies.thirdparty.codeanalysis/*": [
         "./Library/PackageCache/com.genies.thirdparty.codeanalysis@1.0.0/*"
@@ -174,7 +187,7 @@
         "./Library/PackageCache/com.genies.assets.services@1.0.0/*"
       ],
       "@com.genies.featureflags/*": [
-        "./Library/PackageCache/com.genies.featureflags@1.0.3/*"
+        "./Library/PackageCache/com.genies.featureflags@1.0.4/*"
       ],
       "@com.genies.performancemonitoring/*": [
         "./Library/PackageCache/com.genies.performancemonitoring@1.0.0/*"
@@ -188,17 +201,20 @@
       "@com.genies.datamodels/*": [
         "./Library/PackageCache/com.genies.datamodels@1.0.4/*"
       ],
+      "@com.genies.thirdparty.jsonconverters/*": [
+        "./Library/PackageCache/com.genies.thirdparty.jsonconverters@1.1.0/*"
+      ],
       "@com.genies.thirdparty.zxing/*": [
         "./Library/PackageCache/com.genies.thirdparty.zxing@1.0.0/*"
       ],
       "@com.genies.addressables/*": [
-        "./Library/PackageCache/com.genies.addressables@1.0.6/*"
+        "./Library/PackageCache/com.genies.addressables@1.0.8/*"
       ],
       "@com.genies.closet/*": [
-        "./Library/PackageCache/com.genies.closet@1.0.0/*"
+        "./Library/PackageCache/com.genies.closet@1.0.1/*"
       ],
       "@com.genies.cloudsave/*": [
-        "./Library/PackageCache/com.genies.cloudsave@1.0.0/*"
+        "./Library/PackageCache/com.genies.cloudsave@1.0.1/*"
       ],
       "@com.genies.datarepositoryframework/*": [
         "./Library/PackageCache/com.genies.datarepositoryframework@1.0.0/*"
@@ -210,93 +226,97 @@
         "./Library/PackageCache/com.genies.shaderlesstools@1.0.1/*"
       ],
       "@com.genies.s3service/*": [
-        "./Library/PackageCache/com.genies.s3service@1.0.0/*"
+        "./Library/PackageCache/com.genies.s3service@1.0.1/*"
       ],
       "@com.genies.ugc/*": [
-        "./Library/PackageCache/com.genies.ugc@1.0.3/*"
+        "./Library/PackageCache/com.genies.ugc@1.0.4/*"
       ],
       "@com.genies.wearable/*": [
-        "./Library/PackageCache/com.genies.wearable@1.0.3/*"
+        "./Library/PackageCache/com.genies.wearable@1.0.4/*"
       ],
       "@com.genies.animations/*": [
         "./Library/PackageCache/com.genies.animations@1.0.3/*"
       ],
       "@com.genies.avatars.behaviors/*": [
-        "./Library/PackageCache/com.genies.avatars.behaviors@1.0.3/*"
-      ],
-      "@com.genies.camerasystem/*": [
-        "./Library/PackageCache/com.genies.camerasystem@1.0.3/*"
+        "./Library/PackageCache/com.genies.avatars.behaviors@1.0.5/*"
       ],
       "@com.genies.uiframework/*": [
-        "./Library/PackageCache/com.genies.uiframework@1.0.3/*"
+        "./Library/PackageCache/com.genies.uiframework@1.1.1/*"
       ],
       "@com.genies.events/*": [
         "./Library/PackageCache/com.genies.events@1.0.0/*"
       ],
       "@com.genies.thirdparty.microsoftbclasyncinterfaces/*": [
         "./Library/PackageCache/com.genies.thirdparty.microsoftbclasyncinterfaces@1.0.0/*"
+      ],
+      "@com.genies.camerasystem/*": [
+        "./Library/PackageCache/com.genies.camerasystem@1.0.4/*"
       ]
     }
   },
   "include": [
     "Assets/**/*",
-    "./Library/PackageCache/com.genies.experience.sdk@1.2.11/**/*",
-    "./Library/PackageCache/com.genies.avatars.sdk@1.0.7/**/*",
-    "./Library/PackageCache/com.genies.experience.shared@1.1.0/**/*",
-    "./Library/PackageCache/com.genies.experience.bootstrapping@1.3.0/**/*",
-    "./Library/PackageCache/com.genies.experience.cloudsave@1.0.1/**/*",
+    "./Library/PackageCache/com.genies.experience.sdk@1.3.14/**/*",
+    "./Library/PackageCache/com.genies.avatars.sdk@1.0.9/**/*",
+    "./Library/PackageCache/com.genies.experience.shared@1.1.1/**/*",
+    "./Library/PackageCache/com.genies.experience.bootstrapping@1.4.2/**/*",
+    "./Library/PackageCache/com.genies.experience.cloudsave@1.0.3/**/*",
     "./Library/PackageCache/com.genies.experience.manifest@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.graphqlclient@1.0.1/**/*",
-    "./Library/PackageCache/com.genies.login.native@1.1.1/**/*",
-    "./Library/PackageCache/com.genies.multiplayer@1.1.6/**/*",
-    "./Library/PackageCache/com.genies.scripting@1.6.0/**/*",
-    "./Library/PackageCache/com.genies.services@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.utilities@1.2.0/**/*",
+    "./Library/PackageCache/com.genies.leaderboard@2.0.0/**/*",
+    "./Library/PackageCache/com.genies.graphqlclient@1.0.3/**/*",
+    "./Library/PackageCache/com.genies.login.native@1.1.3/**/*",
+    "./Library/PackageCache/com.genies.multiplayer@1.1.9/**/*",
+    "./Library/PackageCache/com.genies.scripting@1.11.0/**/*",
+    "./Library/PackageCache/com.genies.services@1.1.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.charactercontrollers@1.1.2/**/*",
     "./Library/PackageCache/com.genies.thirdparty.unitask@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.traits@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.traits@1.0.1/**/*",
     "./Library/PackageCache/com.genies.thirdparty.dotween@1.0.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.leantouch@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.profiles.sdk@1.0.1/**/*",
+    "./Library/PackageCache/com.genies.refs@1.0.0/**/*",
     "./Library/PackageCache/com.genies.packages.bootstrap@1.0.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.nsubstitute@1.0.0/**/*",
     "./Library/PackageCache/com.genies.abtesting@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.utilities@1.0.2/**/*",
-    "./Library/PackageCache/com.genies.scripting.shared@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.avatars@1.0.3/**/*",
+    "./Library/PackageCache/com.genies.scripting.shared@1.1.1/**/*",
+    "./Library/PackageCache/com.genies.avatars@1.1.1/**/*",
     "./Library/PackageCache/com.genies.login@1.0.1/**/*",
     "./Library/PackageCache/com.genies.crashreporting@1.0.0/**/*",
     "./Library/PackageCache/com.genies.graphqlimporter@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.sdktools@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.thirdparty.editor-toolbox@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.qrcode@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.thirdparty.roundedcorners@1.1.0/**/*",
     "./Library/PackageCache/com.genies.servicemanagement@1.0.1/**/*",
-    "./Library/PackageCache/com.genies.avatars.services@1.0.4/**/*",
-    "./Library/PackageCache/com.genies.looks@1.0.3/**/*",
-    "./Library/PackageCache/com.genies.avatars.context@1.0.7/**/*",
-    "./Library/PackageCache/com.genies.refs@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.thirdparty.editor-toolbox@1.0.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.vcontainer@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.sdktools@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.qrcode@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.avatars.services@1.0.5/**/*",
+    "./Library/PackageCache/com.genies.looks@1.0.5/**/*",
+    "./Library/PackageCache/com.genies.avatars.context@1.0.9/**/*",
     "./Library/PackageCache/com.genies.thirdparty.codeanalysis@1.0.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.fluentassertions@1.0.0/**/*",
     "./Library/PackageCache/com.genies.assets.services@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.featureflags@1.0.3/**/*",
+    "./Library/PackageCache/com.genies.featureflags@1.0.4/**/*",
     "./Library/PackageCache/com.genies.performancemonitoring@1.0.0/**/*",
     "./Library/PackageCache/com.genies.shaders@1.3.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.unitygltf@1.0.0/**/*",
     "./Library/PackageCache/com.genies.datamodels@1.0.4/**/*",
+    "./Library/PackageCache/com.genies.thirdparty.jsonconverters@1.1.0/**/*",
     "./Library/PackageCache/com.genies.thirdparty.zxing@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.addressables@1.0.6/**/*",
-    "./Library/PackageCache/com.genies.closet@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.cloudsave@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.addressables@1.0.8/**/*",
+    "./Library/PackageCache/com.genies.closet@1.0.1/**/*",
+    "./Library/PackageCache/com.genies.cloudsave@1.0.1/**/*",
     "./Library/PackageCache/com.genies.datarepositoryframework@1.0.0/**/*",
     "./Library/PackageCache/com.genies.diskcaching@1.0.0/**/*",
     "./Library/PackageCache/com.genies.shaderlesstools@1.0.1/**/*",
-    "./Library/PackageCache/com.genies.s3service@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.ugc@1.0.3/**/*",
-    "./Library/PackageCache/com.genies.wearable@1.0.3/**/*",
+    "./Library/PackageCache/com.genies.s3service@1.0.1/**/*",
+    "./Library/PackageCache/com.genies.ugc@1.0.4/**/*",
+    "./Library/PackageCache/com.genies.wearable@1.0.4/**/*",
     "./Library/PackageCache/com.genies.animations@1.0.3/**/*",
-    "./Library/PackageCache/com.genies.avatars.behaviors@1.0.3/**/*",
-    "./Library/PackageCache/com.genies.camerasystem@1.0.3/**/*",
-    "./Library/PackageCache/com.genies.uiframework@1.0.3/**/*",
+    "./Library/PackageCache/com.genies.avatars.behaviors@1.0.5/**/*",
+    "./Library/PackageCache/com.genies.uiframework@1.1.1/**/*",
     "./Library/PackageCache/com.genies.events@1.0.0/**/*",
-    "./Library/PackageCache/com.genies.thirdparty.microsoftbclasyncinterfaces@1.0.0/**/*"
+    "./Library/PackageCache/com.genies.thirdparty.microsoftbclasyncinterfaces@1.0.0/**/*",
+    "./Library/PackageCache/com.genies.camerasystem@1.0.4/**/*"
   ]
 }

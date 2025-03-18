@@ -1,0 +1,166 @@
+fileFormatVersion: 2
+guid: f068dfaf802a049d880e051d24ca843f
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":["@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry"],"Source":"\"use strict\";\nObject.defineProperty(exports,
+    \"__esModule\", { value: true });\nconst UnityEngine_1 = require(\"UnityEngine\");\nconst
+    Genies_Leaderboard_1 = require(\"Genies.Leaderboard\");\nconst DG_Tweening_1
+    = require(\"DG.Tweening\");\nconst Genies_Login_Native_1 = require(\"Genies.Login.Native\");\nconst
+    Genies_Profiles_Sdk_1 = require(\"Genies.Profiles.Sdk\");\nconst DG_Tweening_Core_1
+    = require(\"DG.Tweening.Core\");\nconst DG_Tweening_Plugins_Options_1 = require(\"DG.Tweening.Plugins.Options\");\nconst
+    _TweenerCore_3_Vector2_Vector2_VectorOptions = // @ts-ignore \n $generic(DG_Tweening_Core_1.TweenerCore$3,
+    UnityEngine_1.Vector2, UnityEngine_1.Vector2, DG_Tweening_Plugins_Options_1.VectorOptions);\nconst
+    _TweenSettingsExtensions_SetEase__TweenerCore_3_Vector2_Vector2_VectorOptions
+    = $genericMethod(DG_Tweening_1.TweenSettingsExtensions, \"SetEase\", _TweenerCore_3_Vector2_Vector2_VectorOptions);\nclass
+    LeaderboardView extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.podiumEntries = [];\n        this._leaderboardId
+    = \"\";\n        this.myUserId = \"\";\n        this.scrollEntryAnimationOffset
+    = 0;\n        this.userImages = new Map();\n        this.listViewElementLookup
+    = new Map();\n        this.listViewElementsInOrder = [];\n        this.downloadsInProgress
+    = new Set();\n        this.podiumColors = [];\n    }\n    SetDataAndInitialize(leaderboardId)
+    {\n        this._leaderboardId = leaderboardId;\n        this.podiumColors =
+    [this.firstPlace, this.secondPlace, this.thirdPlace];\n        this.FigureOutOffset();\n       
+    this.GetInitialDataAndSetup();\n    }\n    FigureOutOffset() {\n        // Calculate
+    how many items fit in the viewport so we can center user???s entry\n        const
+    scrollRectTransform = this.scrollRect.GetComponent($typeof(UnityEngine_1.RectTransform));\n       
+    const viewportHeight = scrollRectTransform.rect.height;\n        const itemHeight
+    = this.entryViewPrefab.RectTransform.rect.height;\n        // We''ll place the
+    user entry near the vertical center\n        const capacity = viewportHeight
+    / itemHeight - 1;\n        this.scrollEntryAnimationOffset = (capacity / 2) *
+    itemHeight;\n    }\n    async GetInitialDataAndSetup() {\n        this.myUserId
+    = await Genies_Login_Native_1.GeniesLoginSdk.GetUserIdAsync();\n        // Top
+    3 ranks for the podium\n        const topNRanks = await this.GetTopNScores(this.podiumEntries.length);\n       
+    // Ranks around the user (maybe ~50 above, ~30 below, etc.)\n        const ranksAroundUser
+    = await this.GetUserScoresAroundRank();\n        // Combine them\n        let
+    rawList = topNRanks.UserRanks != null ? topNRanks.UserRanks.ToArray() : [];\n       
+    if (ranksAroundUser?.UserRanks) {\n            rawList = rawList.concat(ranksAroundUser.UserRanks.ToArray());\n       
+    }\n        // Filter out invalid user ranks\n        const filteredList = rawList.filter((r)
+    => this.IsValidToShowOnTheLeaderboard(r));\n        // Remove duplicates by rank\n       
+    let finalList = filteredList.reduce((acc, rank) => {\n            if (!acc.find((x)
+    => x.Rank == rank.Rank)) {\n                acc.push(rank);\n            }\n           
+    return acc;\n        }, []);\n        // Sort by rank ascending\n        finalList
+    = finalList.sort((a, b) => a.Rank - b.Rank);\n        this.DrawUserRanks(finalList);\n   
+    }\n    isNullOrWhitespace(str) {\n        return !str || str.trim().length ===
+    0;\n    }\n    IsValidToShowOnTheLeaderboard(leaderboardUserRank) {\n       
+    if (this.isNullOrWhitespace(leaderboardUserRank.UserId))\n            return
+    false;\n        if (this.isNullOrWhitespace(leaderboardUserRank.PrefUsername))\n           
+    return false;\n        return true;\n    }\n    async GetTopNScores(limit = 10)
+    {\n        return $promise(Genies_Leaderboard_1.GeniesLeaderboardSdk.GetTopNRanksAsync(this._leaderboardId,
+    limit));\n    }\n    async GetUserScoresAroundRank() {\n        return $promise(Genies_Leaderboard_1.GeniesLeaderboardSdk.GetRanksAroundUserAsync(this._leaderboardId,
+    50, 30));\n    }\n    async DownloadUserImages(userRanks) {\n        let tasks
+    = [];\n        for (const user of userRanks) {\n            if (!this.userImages.has(user.UserId)
+    && !this.downloadsInProgress.has(user.UserId)) {\n                // Wrap the
+    promise to remove it when it resolves.\n                const promise = this.GetAvatarImageForUser(user).then(userId
+    => {\n                    // Update the UI if it still exists\n                   
+    if (this.listViewElementLookup.has(userId) && this.userImages.has(userId)) {\n                       
+    const entry = this.listViewElementLookup.get(userId);\n                       
+    entry.AvatarImage.sprite = this.userImages.get(userId);\n                   
+    }\n                    this.downloadsInProgress.delete(userId);\n                   
+    // Remove the resolved promise from tasks.\n                    tasks = tasks.filter(p
+    => p !== promise);\n                    return userId;\n                });\n               
+    tasks.push(promise);\n                this.downloadsInProgress.add(user.UserId);\n           
+    }\n            else if (this.userImages.has(user.UserId) && this.listViewElementLookup.has(user.UserId))
+    {\n                // Already loaded, just update the sprite in the UI\n               
+    const entry = this.listViewElementLookup.get(user.UserId);\n                entry.AvatarImage.sprite
+    = this.userImages.get(user.UserId);\n            }\n            else {\n               
+    console.error(`LeaderboardView::DownloadUserImages - Something went wrong with
+    user ID ${user.UserId}: ` +\n                    `Is userID in userImages? ${this.userImages.has(user.UserId)}
+    ` +\n                    `Is userID in listViewElementLookup? ${this.listViewElementLookup.has(user.UserId)}
+    ` +\n                    `Is userID in downloadsInProgress? ${this.downloadsInProgress.has(user.UserId)}`);\n           
+    }\n        }\n        // If there are no new downloads required, just exit\n       
+    if (tasks.length === 0)\n            return;\n        // Wait for all tasks to
+    finish (they''re already removing themselves on resolution)\n        await Promise.all(tasks);\n   
+    }\n    async GetAvatarImageForUser(user) {\n        const result = await $promise(Genies_Profiles_Sdk_1.GeniesProfilesSdk.LoadProfileIconAsync(user.UserId,
+    Genies_Profiles_Sdk_1.IconResolution.Ultra));\n        this.userImages.set(user.UserId,
+    result.Item);\n        return user.UserId;\n    }\n    DrawUserRanks(userRanks)
+    {\n        // Clear the old references\n        this.listViewElementLookup.clear();\n       
+    const topCount = Math.min(userRanks.length, this.podiumEntries.length);\n       
+    // 1. Handle top N (podium) ranks\n        const topThree = userRanks.slice(0,
+    topCount);\n        this.SetupPodium(topThree);\n        // Remaining ranks for
+    the scrolling list\n        const remainder = userRanks.slice(topCount);\n       
+    // If no remainder, show \"no scores\" messaging\n        if (remainder.length
+    === 0) {\n            this.noScoresMessaging.SetActive(true);\n            return;\n       
+    }\n        this.noScoresMessaging.SetActive(false);\n        // Make sure our
+    listViewElementsInOrder has the same count as `remainder`\n        if (this.listViewElementsInOrder.length
+    > remainder.length) {\n            // We have more elements than needed, remove
+    extras\n            for (let i = this.listViewElementsInOrder.length - 1; i >=
+    remainder.length; i--) {\n                const view = this.listViewElementsInOrder[i];\n               
+    UnityEngine_1.GameObject.Destroy(view.gameObject);\n                this.listViewElementsInOrder.splice(i,
+    1);\n            }\n        }\n        else if (this.listViewElementsInOrder.length
+    < remainder.length) {\n            // We have fewer elements than needed, add
+    new ones\n            for (let i = this.listViewElementsInOrder.length; i < remainder.length;
+    i++) {\n                const entry = // @ts-ignore\n                 UnityEngine_1.GameObject.Instantiate(//@ts-ignore\n               
+    this.entryViewPrefab.__geniesInstance__, this.contentParent.transform);\n               
+    this.listViewElementsInOrder.push(entry);\n            }\n        }\n       
+    let indexOfUserEntry = 0;\n        // Assign data to each row\n        for (let
+    i = 0; i < this.listViewElementsInOrder.length; i++) {\n            const rankData
+    = remainder[i];\n            const entryView = this.listViewElementsInOrder[i];\n           
+    entryView.NameText.text = rankData.PrefUsername;\n            entryView.RankText.text
+    = rankData.Rank.toString();\n            // current score or highest score\n           
+    const displayScore = rankData.GameScore != null ? rankData.GameScore : rankData.HighestScore;\n           
+    entryView.ScoreText.text = displayScore?.toString() || \"0\";\n            //
+    Color for user vs non-user\n            entryView.ScoreText.color =\n               
+    rankData.UserId === this.myUserId\n                    ? this.userColorListEntryScoreTextColor\n                   
+    : this.nonUserColorListEntryScoreTextColor;\n            entryView.BackgroundImage.color
+    =\n                rankData.UserId === this.myUserId\n                    ? this.userColorListEntryBackground\n                   
+    : entryView.BackgroundImage.color;\n            entryView.ScoreBackgroundImage.color
+    =\n                rankData.UserId === this.myUserId\n                    ? this.userPlaceColor\n                   
+    : entryView.ScoreBackgroundImage.color;\n            this.listViewElementLookup.set(rankData.UserId,
+    entryView);\n            if (rankData.UserId === this.myUserId) {\n               
+    indexOfUserEntry = i;\n            }\n        }\n        // Start the avatar
+    image downloads\n        this.DownloadUserImages(remainder);\n        // Scroll
+    to the user???s row if we have any rows\n        if (this.listViewElementsInOrder.length
+    > 0) {\n            this.SnapTo(this.listViewElementsInOrder[indexOfUserEntry],
+    indexOfUserEntry);\n        }\n    }\n    SetupPodium(userRanks) {\n        for
+    (let i = 0; i < userRanks.length; i++) {\n            const rankData = userRanks[i];\n           
+    const podiumEntry = this.podiumEntries[i];\n            podiumEntry.NameText.text
+    = rankData.PrefUsername;\n            podiumEntry.RankText.text = rankData.Rank.toString();\n           
+    // current or highest\n            const displayScore = rankData.GameScore !=
+    null ? rankData.GameScore : rankData.HighestScore;\n            podiumEntry.ScoreText.text
+    = displayScore?.toString() || \"0\";\n            // Color the text or background
+    if it???s the local user\n            podiumEntry.ScoreText.color =\n               
+    rankData.UserId === this.myUserId\n                    ? this.userColorListEntryScoreTextColor\n                   
+    : this.nonUserColorListEntryScoreTextColor;\n            const colorForRank =
+    rankData.UserId === this.myUserId\n                ? this.userPlaceColor\n               
+    : this.podiumColors[i];\n            podiumEntry.BackgroundImage.color = colorForRank;\n           
+    podiumEntry.ScoreBackgroundImage.color = colorForRank;\n            // Track
+    so we can update the avatar\n            this.listViewElementLookup.set(rankData.UserId,
+    podiumEntry);\n        }\n        this.DownloadUserImages(userRanks);\n    }\n   
+    SnapTo(entryView, index) {\n        // Force layout so we can get correct positions\n       
+    UnityEngine_1.Canvas.ForceUpdateCanvases();\n        const itemHeight = entryView.RectTransform.rect.height;\n       
+    let pos = index * itemHeight;\n        pos -= this.scrollEntryAnimationOffset;\n       
+    // If the user is near the top, no need to scroll at all:\n        if (pos >
+    0) {\n            // Move the contentParent with a tween\n            const target
+    = new UnityEngine_1.Vector2(this.contentParent.localPosition.x, this.contentParent.localPosition.y);\n           
+    target.y = pos;\n            _TweenSettingsExtensions_SetEase__TweenerCore_3_Vector2_Vector2_VectorOptions(DG_Tweening_1.DOTweenModuleUI.DOAnchorPos(this.contentParent,
+    target, 1.0), DG_Tweening_1.Ease.InOutQuad);\n        }\n    }\n    Show() {\n       
+    this.gameObject.SetActive(true);\n    }\n    Hide() {\n        this.gameObject.SetActive(false);\n   
+    }\n}\nexports.default = LeaderboardView;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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LEVBQUU7WUFDVCxzQ0FBcUM7WUFDckMsTUFBTSxNQUFNLEdBQUcsSUFBSSxxQkFBTyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsRUFBRSxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQyxDQUFDLENBQUM7WUFDbEcsTUFBTSxDQUFDLENBQUMsR0FBRyxHQUFHO1lBQ2YsNkVBQWtCLDhCQUFDLENBQUMsV0FBVyxDQUFDLDBCQUFNLEVBQUUsR0FBRyxHQUFVLGtCQUFJLENBQUMsU0FBUyxDQUFDO1FBQ3ZFO0lBQ0o7SUFFTyxJQUFJO1FBQ1AsSUFBSSxDQUFDLFVBQVUsQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO0lBQ25DO0lBRU8sSUFBSTtRQUNQLElBQUksQ0FBQyxVQUFVLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQztJQUNwQztDQUNKO0FBdlNBLGtDQXVTQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiTGVhZGVyYm9hcmRWaWV3LnRzIl0sInNvdXJjZXNDb250ZW50IjpbbnVsbF19","ScriptHash":"268aa99dbfcfd5e568237e9dfcd4e755","Specifier":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardView","DefaultTypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardView.LeaderboardView","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardView.LeaderboardView","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"podiumEntries","Name":"podiumEntries","TypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":1,"IsArray":true,"IsEnum":false,"ArrayElementInitializer":{"Path":"podiumEntries_D1","Name":"podiumEntries","TypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":true,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Podium
+    Entries","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},"ChildProperties":[],"PrettyName":"Podium
+    Entries","_arrayElementInitializerJson":"{\"Path\":\"podiumEntries_D1\",\"Name\":\"podiumEntries\",\"TypeName\":\"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView\",\"AssemblyName\":null,\"EnumKeys\":[],\"EnumValues\":[],\"IsGeniesBehaviourRef\":true,\"IsGeniesScriptableObjectRef\":false,\"Decorators\":[],\"Initializers\":[],\"ArrayDimension\":1,\"IsArray\":false,\"IsEnum\":false,\"ArrayElementInitializer\":null,\"ChildProperties\":[],\"PrettyName\":\"Podium
+    Entries\",\"_arrayElementInitializerJson\":null,\"_childPropertiesJson\":\"[]\",\"_prettyName\":null}","_childPropertiesJson":"[]","_prettyName":null},{"Path":"firstPlace","Name":"firstPlace","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"First
+    Place","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"secondPlace","Name":"secondPlace","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Second
+    Place","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"thirdPlace","Name":"thirdPlace","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Third
+    Place","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"userPlaceColor","Name":"userPlaceColor","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"User
+    Place Color","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"userColorListEntryBackground","Name":"userColorListEntryBackground","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"User
+    Color List Entry Background","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"userColorListEntryScoreTextColor","Name":"userColorListEntryScoreTextColor","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"User
+    Color List Entry Score Text Color","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"nonUserColorListEntryScoreTextColor","Name":"nonUserColorListEntryScoreTextColor","TypeName":"UnityEngine.Color","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Non
+    User Color List Entry Score Text Color","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"noScoresMessaging","Name":"noScoresMessaging","TypeName":"UnityEngine.GameObject","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"No
+    Scores Messaging","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"scrollRect","Name":"scrollRect","TypeName":"UnityEngine.UI.ScrollRect","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Scroll
+    Rect","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"contentParent","Name":"contentParent","TypeName":"UnityEngine.RectTransform","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Content
+    Parent","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"entryViewPrefab","Name":"entryViewPrefab","TypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":true,"IsGeniesScriptableObjectRef":false,"Decorators":[{"Type":"SerializeField","Args":[]}],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Entry
+    View Prefab","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null}],"SupportedUiEvents":"None","DisplayName":"LeaderboardView","name":"LeaderboardView","hideFlags":"NotEditable"}'

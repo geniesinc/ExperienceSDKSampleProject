@@ -401,7 +401,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: playerAnimatorController
@@ -454,7 +453,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: MinSwipeDist
@@ -507,7 +505,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: MaxSwipeTime
@@ -560,7 +557,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: ForceMult
@@ -613,7 +609,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 6
     PropKey: PerfectShot
@@ -666,7 +661,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 13
     PropKey: PerfectForce
@@ -996,7 +990,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: prefab
@@ -1049,7 +1042,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: amount
@@ -1625,7 +1617,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: scoreText
@@ -1678,7 +1669,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: timerText
@@ -1731,7 +1721,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: topPanel
@@ -1784,7 +1773,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: bannerText
@@ -1837,7 +1825,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: midPanel
@@ -1890,7 +1877,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 4
     PropKey: retryButton
@@ -1943,7 +1929,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: timeAmount

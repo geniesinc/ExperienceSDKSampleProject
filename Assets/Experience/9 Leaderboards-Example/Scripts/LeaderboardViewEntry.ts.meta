@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 55843670a4e554c738b838a820abfa23
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    UnityEngine_1 = require(\"UnityEngine\");\nclass LeaderboardEntryView extends
+    UnityEngine_1.MonoBehaviour {\n}\nexports.default = LeaderboardEntryView;\n//#
+    sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiTGVhZGVyYm9hcmRWaWV3RW50cnkuanMiLCJtYXBwaW5ncyI6Ijs7QUFBQSw2Q0FBd0Q7QUFJeEQsTUFBcUIsb0JBQXFCLFNBQVEsMkJBQWE7Q0FXL0Q7QUFYQSx1Q0FXQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiTGVhZGVyYm9hcmRWaWV3RW50cnkudHMiXSwic291cmNlc0NvbnRlbnQiOltudWxsXX0=","ScriptHash":"1af2687c72729fa13181e1897954884d","Specifier":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry","DefaultTypeName":"@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/9
+    Leaderboards-Example/Scripts/LeaderboardViewEntry.LeaderboardEntryView","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"AvatarImage","Name":"AvatarImage","TypeName":"UnityEngine.UI.Image","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Avatar
+    Image","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"NameText","Name":"NameText","TypeName":"TMPro.TextMeshProUGUI","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Name
+    Text","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"ScoreText","Name":"ScoreText","TypeName":"TMPro.TextMeshProUGUI","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Score
+    Text","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"RankText","Name":"RankText","TypeName":"TMPro.TextMeshProUGUI","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Rank
+    Text","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"RectTransform","Name":"RectTransform","TypeName":"UnityEngine.RectTransform","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Rect
+    Transform","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"BackgroundImage","Name":"BackgroundImage","TypeName":"UnityEngine.UI.Image","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Background
+    Image","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"ScoreBackgroundImage","Name":"ScoreBackgroundImage","TypeName":"UnityEngine.UI.Image","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Score
+    Background Image","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null}],"SupportedUiEvents":"None","DisplayName":"LeaderboardEntryView","name":"LeaderboardViewEntry","hideFlags":"NotEditable"}'
