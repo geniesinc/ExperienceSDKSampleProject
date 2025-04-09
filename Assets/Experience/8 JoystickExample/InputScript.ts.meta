@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 5aa2b96eba6344e418fee78844c9c774
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    UnityEngine_1 = require(\"UnityEngine\");\nclass Input extends UnityEngine_1.MonoBehaviour
+    {\n    //Called when script instance is loaded\n    Awake() { }\n    //Start
+    is called on the frame when a script is enabled just \n    //before any of the
+    Update methods are called the first time.\n    Start() { }\n    //Update is called
+    every frame, if the MonoBehaviour is enabled.\n    Update() { }\n}\nexports.default
+    = Input;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiSW5wdXRTY3JpcHQuanMiLCJtYXBwaW5ncyI6Ijs7QUFDQSw2Q0FBMkM7QUFDM0MsTUFBcUIsS0FBTSxTQUFRLDJCQUFhO0lBRTVDLHVDQUFzQztJQUM5QixLQUFLLEtBQVc7SUFFeEIsNkRBQTREO0lBQzVELDZEQUE0RDtJQUNwRCxLQUFLLEtBQVc7SUFFeEIsZ0VBQStEO0lBQ3ZELE1BQU0sS0FBVztDQUM3QjtBQVhBLHdCQVdBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJJbnB1dFNjcmlwdC50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"5f172f0da02e8c250a01ec8d0e50c4a3","Specifier":"@assets/Experience/8
+    JoystickExample/InputScript","DefaultTypeName":"@assets/Experience/8 JoystickExample/InputScript.Input","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/8
+    JoystickExample/InputScript.Input","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[],"SupportedUiEvents":"None","DisplayName":"Input","name":"InputScript","hideFlags":"NotEditable"}'

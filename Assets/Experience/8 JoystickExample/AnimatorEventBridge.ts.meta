@@ -1,0 +1,33 @@
+fileFormatVersion: 2
+guid: 99ba09e37282047c9a2d6694c3d56d15
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":[],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.AnimEventType
+    = void 0;\nconst UnityEngine_1 = require(\"UnityEngine\");\nvar AnimEventType;\n(function
+    (AnimEventType) {\n    AnimEventType[AnimEventType[\"OnFootstep\"] = 0] = \"OnFootstep\";\n   
+    AnimEventType[AnimEventType[\"OnLand\"] = 1] = \"OnLand\";\n})(AnimEventType
+    || (exports.AnimEventType = AnimEventType = {}));\nclass AnimatorEventBridge
+    extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n        super(...arguments);\n       
+    this._eventDict = {\n            [AnimEventType.OnFootstep]: null,\n           
+    [AnimEventType.OnLand]: null,\n        };\n    }\n    Subscribe(type, callback)
+    {\n        this._eventDict[type] = (this._eventDict[type] || ((_) => { })); //ensure
+    it is not null before adding, if null, create a dummy function.\n        this._eventDict[type]
+    = (animationEvent) => {\n            if (this._eventDict[type]) {\n               
+    this._eventDict[type](animationEvent);\n            }\n            callback(animationEvent);\n       
+    };\n    }\n    Unsubscribe(type, callback) {\n        if (this._eventDict[type])
+    {\n            let originalCallback = this._eventDict[type];\n            this._eventDict[type]
+    = (animationEvent) => {\n                if (originalCallback) {\n                   
+    originalCallback(animationEvent);\n                }\n            };\n       
+    }\n    }\n    OnFootstep(animationEvent) {\n        this._eventDict[AnimEventType.OnFootstep]?.(animationEvent);\n   
+    }\n    OnLand(animationEvent) {\n        this._eventDict[AnimEventType.OnLand]?.(animationEvent);\n   
+    }\n}\nexports.default = AnimatorEventBridge;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQW5pbWF0b3JFdmVudEJyaWRnZS5qcyIsIm1hcHBpbmdzIjoiOzs7QUFDQSw2Q0FBMkM7QUFFM0MsSUFBWSxhQUdaO0FBSEEsV0FBWSxhQUFhO0lBQ3JCLDZEQUFVO0lBQ1YscURBQUs7QUFDVCxHQUhZLGFBQWEsNkJBQWIsYUFBYSxRQUd6QjtBQUVBLE1BQXFCLG1CQUFvQixTQUFRLDJCQUFhO0lBQTlEOztRQUNZLGVBQVUsR0FBa0Y7WUFDaEcsQ0FBQyxhQUFhLENBQUMsVUFBVSxDQUFDLEVBQUUsSUFBSTtZQUNoQyxDQUFDLGFBQWEsQ0FBQyxNQUFNLENBQUMsRUFBRSxJQUFJO1NBQy9CO0lBK0JMO0lBN0JXLFNBQVMsQ0FBQyxJQUFtQixFQUFFLFFBQWtEO1FBQ3BGLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLEVBQUUsRUFBRSxHQUFFLENBQUMsQ0FBQyxDQUE2QyxDQUFDLENBQUMsd0VBQXVFO1FBQ25MLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxjQUFjLEVBQUUsRUFBRTtZQUN2QyxJQUFHLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxDQUFDLEVBQUM7Z0JBQ3JCLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxDQUFDLENBQUMsY0FBYyxDQUFDO1lBQ3pDO1lBQ0EsUUFBUSxDQUFDLGNBQWMsQ0FBQztRQUM1QixDQUFDO0lBQ0w7SUFFTyxXQUFXLENBQUMsSUFBbUIsRUFBRSxRQUFrRDtRQUN0RixJQUFJLElBQUksQ0FBQyxVQUFVLENBQUMsSUFBSSxDQUFDLEVBQUU7WUFDdkIsSUFBSSxnQkFBZ0IsR0FBRyxJQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQztZQUM1QyxJQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxHQUFHLENBQUMsY0FBYyxFQUFFLEVBQUU7Z0JBQ3ZDLElBQUcsZ0JBQWdCLEVBQUM7b0JBQ2hCLGdCQUFnQixDQUFDLGNBQWMsQ0FBQztnQkFDcEM7WUFDSixDQUFDO1FBQ0w7SUFDSjtJQUVRLFVBQVUsQ0FBQyxjQUE4QjtRQUM3QyxJQUFJLENBQUMsVUFBVSxDQUFDLGFBQWEsQ0FBQyxVQUFVLENBQUMsRUFBRSxDQUFDLGNBQWMsQ0FBQztJQUMvRDtJQUVRLE1BQU0sQ0FBQyxjQUE4QjtRQUN6QyxJQUFJLENBQUMsVUFBVSxDQUFDLGFBQWEsQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLGNBQWMsQ0FBQztJQUMzRDtDQUVKO0FBbkNBLHNDQW1DQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQW5pbWF0b3JFdmVudEJyaWRnZS50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"8e9b00fa99b6c6fc54222bcd2b2b2550","Specifier":"@assets/Experience/8
+    JoystickExample/AnimatorEventBridge","DefaultTypeName":"@assets/Experience/8
+    JoystickExample/AnimatorEventBridge.AnimatorEventBridge","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/8
+    JoystickExample/AnimatorEventBridge.AnimatorEventBridge","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[],"SupportedUiEvents":"None","DisplayName":"AnimatorEventBridge","name":"AnimatorEventBridge","hideFlags":"NotEditable"}'

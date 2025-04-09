@@ -145,7 +145,6 @@ MonoBehaviour:
     ArrayLength: 0
     IsArray: 0
     ArrayDimension: -1
-    IsExpanded: 0
     IsPrefabOverride: 0
     PropType: 24
     PropKey: resetTime

@@ -1,0 +1,31 @@
+fileFormatVersion: 2
+guid: af82b282be880418b940f53f39083d2d
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 22604dd76f55453daccee3ed9e7b94b5, type: 3}
+  SerializedAsset: '{"IsCompiled":true,"CompilerVersion":"2.0.63","ReferencedSpecifiers":["@assets/Experience/8
+    JoystickExample/AvatarController","@assets/Experience/8 JoystickExample/AnimatorEventBridge"],"Source":"\"use
+    strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst
+    UnityEngine_1 = require(\"UnityEngine\");\nconst Genies_Avatars_Sdk_1 = require(\"Genies.Avatars.Sdk\");\nclass
+    CreateGeniesAvatar extends UnityEngine_1.MonoBehaviour {\n    constructor() {\n       
+    super(...arguments);\n        this.autoSpawn = true;\n        this.DidSpawn =
+    false;\n    }\n    async Start() {\n        this._avatarController = // @ts-ignore\n           
+    this.GetComponent(\"@assets/Experience/8 JoystickExample/AvatarController.AvatarController\");\n       
+    if (this.autoSpawn) {\n            await this.SpawnAvatarAsync();\n        }\n   
+    }\n    async SpawnAvatarAsync() {\n        const avatar = await $promise(Genies_Avatars_Sdk_1.GeniesAvatarsSdk.LoadUserAvatarAsync(\"User
+    Avatar\", this.transform, this.animatorController, false));\n        this.DidSpawn
+    = true;\n        const animatorEventBridge = // @ts-ignore\n         avatar.Root.gameObject.AddComponent(\"@assets/Experience/8
+    JoystickExample/AnimatorEventBridge.AnimatorEventBridge\");\n        if (this._avatarController
+    != null) {\n            this._avatarController.SetAnimatorEventBridge(animatorEventBridge);\n       
+    }\n        return avatar;\n    }\n}\nexports.default = CreateGeniesAvatar;\n//#
+    sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ3JlYXRlR2VuaWVzQXZhdGFyLmpzIiwibWFwcGluZ3MiOiI7O0FBQ0EsNkNBQXNFO0FBRXRFLDJEQUFtRTtBQUVuRSxNQUFxQixrQkFBbUIsU0FBUSwyQkFBYTtJQUE3RDs7UUFHVyxjQUFTLEdBQVksSUFBSTtRQUV6QixhQUFRLEdBQVksS0FBSztJQXlCcEM7SUFyQkksS0FBSyxDQUFDLEtBQUs7UUFDUCxJQUFJLENBQUMsaUJBQWlCLEdBQUU7WUFBQyxJQUFJLENBQUMsWUFBVyx5RUFBaUIsQ0FBSTtRQUM5RCxJQUFJLElBQUksQ0FBQyxTQUFTLEVBQUU7WUFDaEIsTUFBTSxJQUFJLENBQUMsZ0JBQWdCLEVBQUU7UUFDakM7SUFDSjtJQUVPLEtBQUssQ0FBQyxnQkFBZ0I7UUFDekIsTUFBTSxNQUFNLEdBQWlCLE1BQUssU0FBQyxxQ0FBZ0IsQ0FBQyxtQkFBbUIsQ0FDbkUsYUFBYSxFQUNiLElBQUksQ0FBQyxTQUFTLEVBQ2QsSUFBSSxDQUFDLGtCQUFrQixFQUN2QixLQUFJLENBQ1IsQ0FBQztRQUNELElBQUksQ0FBQyxRQUFRLEdBQUcsSUFBSTtRQUNwQixNQUFNLG1CQUFtQixHQUF1QjtTQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLFlBQVcsK0VBQW9CLENBQTJCO1FBQ2xJLElBQUksSUFBSSxDQUFDLGlCQUFpQixJQUFJLElBQUksRUFBRTtZQUNoQyxJQUFJLENBQUMsaUJBQWlCLENBQUMsc0JBQXNCLENBQUMsbUJBQW1CLENBQUM7UUFDdEU7UUFDQSxPQUFPLE1BQU07SUFDakI7Q0FDSjtBQTlCQSxxQ0E4QkEiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkNyZWF0ZUdlbmllc0F2YXRhci50cyJdLCJzb3VyY2VzQ29udGVudCI6W251bGxdfQ==","ScriptHash":"37df527b517b36c672353f9b250c195e","Specifier":"@assets/Experience/8
+    JoystickExample/CreateGeniesAvatar","DefaultTypeName":"@assets/Experience/8 JoystickExample/CreateGeniesAvatar.CreateGeniesAvatar","IsMonobehaviour":true,"IsScriptableObj":false,"InheritanceChain":["@assets/Experience/8
+    JoystickExample/CreateGeniesAvatar.CreateGeniesAvatar","UnityEngine.MonoBehaviour","UnityEngine.Behaviour","UnityEngine.Component","UnityEngine.Object","@com.genies.scripting@1.11.0/Runtime/Typing/index.d.System.Object"],"Properties":[{"Path":"animatorController","Name":"animatorController","TypeName":"UnityEngine.RuntimeAnimatorController","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":[],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Animator
+    Controller","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"autoSpawn","Name":"autoSpawn","TypeName":"boolean","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":["true"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Auto
+    Spawn","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null},{"Path":"DidSpawn","Name":"DidSpawn","TypeName":"boolean","AssemblyName":null,"EnumKeys":[],"EnumValues":[],"IsGeniesBehaviourRef":false,"IsGeniesScriptableObjectRef":false,"Decorators":[],"Initializers":["false"],"ArrayDimension":-1,"IsArray":false,"IsEnum":false,"ArrayElementInitializer":null,"ChildProperties":[],"PrettyName":"Did
+    Spawn","_arrayElementInitializerJson":null,"_childPropertiesJson":"[]","_prettyName":null}],"SupportedUiEvents":"None","DisplayName":"CreateGeniesAvatar","name":"CreateGeniesAvatar","hideFlags":"NotEditable"}'
